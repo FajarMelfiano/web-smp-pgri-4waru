@@ -1,0 +1,10 @@
+*
+!.gitignore
+!site/
+!site/**
+!covers/
+!covers/**
+!galeri/
+!galeri/**
+!alumni/
+!alumni/**

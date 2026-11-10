@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <rect width="800" height="600" fill="#fafbfc"/>
+  <circle cx="680" cy="110" r="160" fill="#126ea6" fill-opacity="0.06"/>
+  <circle cx="120" cy="490" r="210" fill="#18181b" fill-opacity="0.04"/>
+  <!-- Halaman & Gedung Sekolah -->
+  <rect x="80" y="250" width="640" height="230" rx="12" fill="#ffffff" stroke="#18181b" stroke-width="4"/>
+  <polygon points="60,255 400,125 740,255" fill="#126ea6"/>
+  <rect x="330" y="320" width="140" height="160" rx="8" fill="#fafbfc" stroke="#18181b" stroke-width="4"/>
+  <!-- Jendela Kelas -->
+  <rect x="130" y="295" width="75" height="90" rx="6" fill="#f4f4f5" stroke="#18181b" stroke-width="3"/>
+  <rect x="225" y="295" width="75" height="90" rx="6" fill="#f4f4f5" stroke="#18181b" stroke-width="3"/>
+  <rect x="500" y="295" width="75" height="90" rx="6" fill="#f4f4f5" stroke="#18181b" stroke-width="3"/>
+  <rect x="595" y="295" width="75" height="90" rx="6" fill="#f4f4f5" stroke="#18181b" stroke-width="3"/>
+  <!-- Tiang Bendera -->
+  <line x1="400" y1="85" x2="400" y2="480" stroke="#18181b" stroke-width="5"/>
+  <rect x="402" y="90" width="76" height="24" fill="#126ea6"/>
+  <rect x="402" y="114" width="76" height="24" fill="#ffffff" stroke="#18181b" stroke-width="2"/>
+  <!-- Papan Nama -->
+  <rect x="255" y="218" width="290" height="44" rx="22" fill="#18181b"/>
+  <text x="400" y="246" text-anchor="middle" fill="#ffffff" font-family="Plus Jakarta Sans, sans-serif" font-size="18" font-weight="800" letter-spacing="1">SMP PGRI 4 WARU · 1979</text>
+  <line x1="40" y1="480" x2="760" y2="480" stroke="#18181b" stroke-width="4"/>
+  <text x="400" y="535" text-anchor="middle" fill="#52525b" font-family="Plus Jakarta Sans, sans-serif" font-size="16" font-weight="600">Jl. Anggrek No. 109, Desa Kureksari, Kec. Waru, Sidoarjo</text>
+</svg>
