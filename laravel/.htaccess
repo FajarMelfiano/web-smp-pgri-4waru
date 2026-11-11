@@ -1,0 +1,29 @@
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    RewriteEngine On
+
+    # Blokir akses langsung ke file dan direktori sensitif saat di-extract di public_html cPanel
+    RewriteRule ^(\.env.*|\.git.*|artisan|composer\.(json|lock)|package\.json|phpunit\.xml|vite\.config\.js|README\.md|AGENTS\.md|CLAUDE\.md)$ - [F,L,NC]
+    RewriteRule ^(app|bootstrap|config|database|resources|routes|tests|vendor)(/|$) - [F,L,NC]
+    RewriteRule ^storage/(app|framework|logs)(/|$) - [F,L,NC]
+
+    # Teruskan header Authorization
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Teruskan X-XSRF-Token
+    RewriteCond %{HTTP:x-xsrf-token} .
+    RewriteRule .* - [E=HTTP_X_XSRF_TOKEN:%{HTTP:X-XSRF-Token}]
+
+    # Layani file statis yang ada di dalam folder public/ (css, js, images, fonts, favicon, dll.)
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteCond %{DOCUMENT_ROOT}/public/$1 -f
+    RewriteRule ^(.*)$ public/$1 [L]
+
+    # Arahkan seluruh request aplikasi ke front controller Laravel
+    RewriteCond %{REQUEST_URI} !^/public/index\.php
+    RewriteRule ^ index.php [L]
+</IfModule>
