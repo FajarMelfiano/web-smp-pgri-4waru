@@ -702,6 +702,39 @@ section[id] {
   isolation: isolate;
 }
 
+.hero__backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  mask-image: radial-gradient(ellipse 85% 75% at 50% 38%, black 15%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 85% 75% at 50% 38%, black 15%, transparent 75%);
+}
+
+.hero__backdrop-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  opacity: 0.11;
+  filter: blur(2.5px) grayscale(100%) contrast(105%) brightness(98%);
+  transform: scale(1.06);
+}
+
+[data-theme="dark"] .hero__backdrop-img {
+  opacity: 0.14;
+  filter: blur(2.5px) grayscale(100%) contrast(110%) brightness(75%);
+}
+
+.hero__backdrop-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 35%, var(--red-soft-2) 0%, transparent 65%);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
 .hero > .wrap {
   position: relative;
   z-index: 1;
@@ -739,11 +772,216 @@ section[id] {
   margin-top: 1.9rem;
 }
 
+.i--sm {
+  width: 15px;
+  height: 15px;
+}
+
+/* ---------- Kartu kampus (foto beranda) ---------- */
+
+.campus-card {
+  width: 100%;
+  max-width: 980px;
+  margin: clamp(1.75rem, 3.5vw, 2.75rem) auto 0;
+  padding: 0.5rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  position: relative;
+  transition: transform 220ms var(--ease), box-shadow 220ms var(--ease), border-color 220ms var(--ease);
+}
+
+.campus-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--red-soft-2);
+}
+
+.campus-card__trigger {
+  display: block;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  border: 0;
+  border-radius: calc(var(--r-xl) - 0.5rem);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  position: relative;
+  outline: none;
+}
+
+.campus-card__trigger:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 3px;
+}
+
+.campus-card__media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  max-height: 480px;
+  border-radius: calc(var(--r-xl) - 0.5rem);
+  overflow: hidden;
+  background: var(--tint);
+  outline: 1px solid oklch(0 0 0 / 0.08);
+  outline-offset: -1px;
+}
+
+[data-theme="dark"] .campus-card__media {
+  outline-color: oklch(1 0 0 / 0.1);
+}
+
+.campus-card__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 380ms var(--ease), filter 380ms var(--ease);
+}
+
+.campus-card__trigger:hover .campus-card__img,
+.campus-card__trigger:focus-visible .campus-card__img {
+  transform: scale(1.025);
+}
+
+.campus-card__badge {
+  position: absolute;
+  right: 0.85rem;
+  bottom: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: var(--pill);
+  background: rgba(24, 24, 27, 0.78);
+  color: #ffffff;
+  font-size: var(--f-xs);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.28);
+  transition: transform 200ms var(--ease), background-color 200ms var(--ease);
+}
+
+.campus-card__badge .i {
+  width: 16px;
+  height: 16px;
+}
+
+.campus-card__trigger:hover .campus-card__badge,
+.campus-card__trigger:focus-visible .campus-card__badge {
+  background: rgba(14, 94, 143, 0.94);
+  transform: translateY(-1px);
+}
+
+.campus-card__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.85rem 0.85rem 0.45rem;
+  color: var(--ink);
+}
+
+.campus-card__meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.campus-card__tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--pill);
+  background: var(--red-soft);
+  color: var(--red);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.campus-card__location {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--ink-2);
+  font-size: var(--f-xs);
+  font-weight: 500;
+}
+
+.campus-card__location .i {
+  color: var(--red);
+}
+
+.campus-card__action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--red);
+  font-size: var(--f-xs);
+  font-weight: 600;
+  transition: transform 200ms var(--ease), color 200ms var(--ease);
+}
+
+.campus-card__trigger:hover .campus-card__action,
+.campus-card__trigger:focus-visible .campus-card__action {
+  transform: translateX(3px);
+}
+
+@media (max-width: 580px) {
+  .campus-card {
+    padding: 0.375rem;
+    border-radius: var(--r-lg);
+  }
+
+  .campus-card__trigger {
+    border-radius: calc(var(--r-lg) - 0.375rem);
+  }
+
+  .campus-card__media {
+    aspect-ratio: 16 / 10;
+    border-radius: calc(var(--r-lg) - 0.375rem);
+  }
+
+  .campus-card__badge {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.75rem;
+    right: 0.5rem;
+    bottom: 0.5rem;
+  }
+
+  .campus-card__bar {
+    padding: 0.65rem 0.5rem 0.35rem;
+  }
+
+  .campus-card__meta {
+    gap: 0.5rem;
+  }
+
+  .campus-card__location {
+    font-size: 0.78rem;
+  }
+
+  .campus-card__action {
+    display: none;
+  }
+}
+
 .facts {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   width: 100%;
-  margin-top: clamp(2.5rem, 5vw, 3.75rem);
+  margin-top: clamp(2rem, 4vw, 3rem);
   border: 1px solid var(--line);
   border-radius: var(--r-xl);
   background: var(--surface);
@@ -767,6 +1005,8 @@ section[id] {
   font-weight: 800;
   line-height: 1;
   letter-spacing: -0.035em;
+  font-variant-numeric: tabular-nums;
+}
 }
 
 .facts span {
@@ -783,6 +1023,39 @@ section[id] {
   color: var(--ink-3);
   font-size: 0.78rem;
   line-height: 1.6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.hero__photo-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.65rem;
+  border-radius: var(--pill);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--red);
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 180ms var(--ease), border-color 180ms var(--ease), color 180ms var(--ease), box-shadow 180ms var(--ease);
+}
+
+.hero__photo-link:hover {
+  transform: translateY(-1px);
+  border-color: var(--red-soft-2);
+  color: var(--red-solid-hover);
+  box-shadow: var(--shadow-sm);
+}
+
+.hero__photo-link:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 2px;
 }
 
 /* ---------- Kartu alasan ---------- */

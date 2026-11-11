@@ -541,6 +541,9 @@
       activeTriggers = collectVisibleTriggers(trigger);
       lbIndex = Math.max(0, activeTriggers.indexOf(trigger));
       lastFocused = trigger;
+      if (lbPrev) lbPrev.hidden = activeTriggers.length <= 1;
+      if (lbNext) lbNext.hidden = activeTriggers.length <= 1;
+      if (lbCounter) lbCounter.hidden = activeTriggers.length <= 1;
       renderLightbox();
       lightbox.hidden = false;
       document.body.classList.add("has-lightbox");

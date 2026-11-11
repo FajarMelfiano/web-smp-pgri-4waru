@@ -3,6 +3,24 @@
 @section('content')
 
 <section class="hero" aria-labelledby="judul">
+  @if(!empty($siteSettings['hero_image_path']))
+    <div class="hero__backdrop" aria-hidden="true">
+      <picture>
+        <source srcset="{{ asset('images/gedung-smp-pgri4-waru.webp') }}" type="image/webp">
+        <img
+          src="{{ asset('images/gedung-smp-pgri4-waru.jpg') }}"
+          alt=""
+          class="hero__backdrop-img"
+          width="1920"
+          height="1080"
+          loading="eager"
+          fetchpriority="high"
+        >
+      </picture>
+      <div class="hero__backdrop-overlay"></div>
+    </div>
+  @endif
+
   <div class="deco" aria-hidden="true">
     <span class="deco__ring" style="width:660px;left:50%;top:-190px;transform:translateX(-50%)"></span>
     <span class="deco__ring deco__ring--dash" style="width:900px;left:50%;top:-330px;transform:translateX(-50%)"></span>
@@ -28,19 +46,31 @@
       <a class="btn btn--ghost" href="{{ route('profil') }}">Kenali sekolah</a>
     </div>
 
-    @if(!empty($siteSettings['hero_image_path']))
-      <figure style="margin:2rem auto 0;max-width:860px;border-radius:var(--r-lg);overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow-md)">
-        <img src="{{ asset('storage/'.$siteSettings['hero_image_path']) }}" alt="{{ $siteSettings['nama_sekolah'] ?? 'SMP PGRI 4 Waru' }}" style="width:100%;max-height:420px;object-fit:cover;display:block">
-      </figure>
-    @endif
-
     <ul class="facts">
       <li><b>{{ $siteSettings['tahun_berdiri'] ?? '1979' }}</b><span>Tahun berdiri</span></li>
       <li><b>{{ $siteSettings['luas_tanah'] ?? '660 m²' }}</b><span>Luas tanah</span></li>
       <li><b>6 hari</b><span>Belajar per minggu</span></li>
       <li><b>{{ $siteSettings['npsn'] ?? '20540020' }}</b><span>NPSN</span></li>
     </ul>
-    <p class="hero__meta">Purwarupa tugas sekolah. Data pokok dirangkum dari Data Referensi Kemendikdasmen.</p>
+    <p class="hero__meta">
+      Purwarupa tugas sekolah. Data pokok dirangkum dari Data Referensi Kemendikdasmen.
+      @if(!empty($siteSettings['hero_image_path']))
+        <button
+          type="button"
+          class="hero__photo-link"
+          data-lightbox-trigger
+          data-src="{{ asset('images/gedung-smp-pgri4-waru.webp') }}"
+          data-title="Gedung SMP PGRI 4 Waru"
+          data-desc="Fasilitas utama dan gerbang sekolah di Jl. Anggrek No. 109, Kureksari, Kecamatan Waru, Sidoarjo."
+          data-tag="Kampus dan Fasilitas"
+        >
+          <svg class="i i--sm" aria-hidden="true"><use href="#i-expand"/></svg>
+          <span>Lihat foto gerbang asli</span>
+        </button>
+      @endif
+    </p>
+  </div>
+</section>
   </div>
 </section>
 

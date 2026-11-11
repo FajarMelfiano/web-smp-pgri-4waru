@@ -45,6 +45,10 @@
     <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
     <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H19v15H6.5A2.5 2.5 0 0 0 4 20.5Z"/><path d="M4 20.5A2.5 2.5 0 0 1 6.5 18H19v3H6.5"/></symbol>
     <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.4-3 7.6-7 9-4-1.4-7-4.6-7-9V6Z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><path d="M9 21v-7a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v7"/></symbol>
+    <symbol id="i-newspaper" viewBox="0 0 24 24"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Z"/><path d="M18 14h-8M15 18h-5M10 6h8v4h-8Z"/></symbol>
+    <symbol id="i-form" viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></symbol>
+    <symbol id="i-graduate" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></symbol>
     <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 20c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/><path d="M16 5.5a3 3 0 0 1 0 5.8M17.5 15c2 .6 3 2.2 3 5"/></symbol>
     <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 8 4.5-8 4.5-8-4.5Z"/><path d="m4 12 8 4.5 8-4.5M4 16.5 12 21l8-4.5"/></symbol>
     <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></symbol>
@@ -154,19 +158,19 @@
 
 <nav class="mobile-quickbar" aria-label="Aksi cepat perangkat seluler">
   <a class="mobile-quickbar__item @if(request()->routeIs('beranda')) is-active @endif" href="{{ route('beranda') }}">
-    <svg class="i" aria-hidden="true"><use href="#i-layers"/></svg>
+    <svg class="i" aria-hidden="true"><use href="#i-home"/></svg>
     <span>Beranda</span>
   </a>
   <a class="mobile-quickbar__item @if(request()->routeIs('berita.*')) is-active @endif" href="{{ route('berita.index') }}">
-    <svg class="i" aria-hidden="true"><use href="#i-image"/></svg>
+    <svg class="i" aria-hidden="true"><use href="#i-newspaper"/></svg>
     <span>Berita</span>
   </a>
   <a class="mobile-quickbar__item mobile-quickbar__item--cta @if(request()->routeIs('ppdb')) is-active @endif" href="{{ route('ppdb') }}">
-    <svg class="i" aria-hidden="true"><use href="#i-file"/></svg>
+    <svg class="i" aria-hidden="true"><use href="#i-form"/></svg>
     <span>Daftar PPDB</span>
   </a>
   <a class="mobile-quickbar__item @if(request()->routeIs('alumni.*')) is-active @endif" href="{{ route('alumni.index') }}">
-    <svg class="i" aria-hidden="true"><use href="#i-users"/></svg>
+    <svg class="i" aria-hidden="true"><use href="#i-graduate"/></svg>
     <span>Alumni</span>
   </a>
   <a class="mobile-quickbar__item" href="tel:+62318538447">

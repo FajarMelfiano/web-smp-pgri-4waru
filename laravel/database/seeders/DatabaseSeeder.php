@@ -232,9 +232,10 @@ class DatabaseSeeder extends Seeder
             'hero_deskripsi' => 'Sekolah swasta di bawah YPLP DASMEN PGRI Jawa Timur. Alamatnya tidak pernah pindah dari Jalan Anggrek No. 109, dan kegiatan belajar berlangsung pagi hari, enam hari dalam seminggu.',
             'visi_sekolah' => 'Menjadi sekolah menengah pertama yang dekat dengan warganya, tempat siswa Kureksari belajar dengan tertib, percaya diri, dan siap melanjutkan pendidikan.',
             'pengumuman_ppdb' => 'Pendaftaran dilakukan langsung di kantor sekolah Jl. Anggrek No. 109, Kureksari.',
-            'status_ppdb' => 'Dibuka — Layanan Kantor Sekolah',
+            'status_ppdb' => 'Dibuka: Layanan Kantor Sekolah',
             'tahun_ajaran' => '2026/2027',
             'logo_path' => 'site/logo_sekolah-655024df-93c6-49ea-8c84-3185a58193df.png',
+            'hero_image_path' => 'site/gedung-smp-pgri4-waru.webp',
         ];
 
         foreach ($savedSettings as $key => $value) {
