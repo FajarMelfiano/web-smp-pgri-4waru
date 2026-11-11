@@ -16,7 +16,7 @@
         <svg class="i" aria-hidden="true"><use href="#i-upright"/></svg>
       </a>
       <a class="btn btn--primary btn--sm" href="{{ route('admin.ekspor.pendaftar') }}">
-        <svg class="i" aria-hidden="true"><use href="#i-check"/></svg>
+        <svg class="i" aria-hidden="true"><use href="#i-download"/></svg>
         <span>Ekspor CSV Lengkap</span>
       </a>
     </div>

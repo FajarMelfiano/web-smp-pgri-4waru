@@ -82,7 +82,7 @@
           <p>SMP PGRI 4 Waru mulai berjalan pada 1979. Izin pendiriannya tercatat dalam Surat Keputusan 421.3/2829/404.3.1/1979, dan penyelenggaraannya berada di bawah YPLP DASMEN PGRI Jawa Timur.</p>
           <p>Sejak awal, sekolah ini melayani keluarga di Kureksari dan desa-desa sekitar Kecamatan Waru. Kegiatan belajar berlangsung pagi hari, enam hari dalam seminggu, di tanah seluas 660 meter persegi.</p>
           <p>Alamat sekolah tidak berubah: Jl. Anggrek No. 109, Kureksari, Kecamatan Waru, Kabupaten Sidoarjo, Jawa Timur 61256.</p>
-          <a class="btn btn--ghost" href="{{ route('kontak') }}">Lihat lokasi <svg class="i i--arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          <a class="btn btn--ghost" href="{{ route('kontak') }}">Lihat lokasi</a>
         </div>
       </div>
     </div>

@@ -61,10 +61,7 @@
           <button class="map-hold" type="button" data-map-hold
             data-src="https://www.openstreetmap.org/export/embed.html?bbox=112.7227%2C-7.3669%2C112.7427%2C-7.3569&amp;layer=mapnik&amp;marker=-7.3619%2C112.7327"
             data-title="Peta lokasi SMP PGRI 4 Waru di Jl. Anggrek No. 109, Kureksari, Waru, Sidoarjo">
-            <svg class="map-pin" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11Z" />
-              <circle cx="12" cy="10" r="2.6" />
-            </svg>
+            <svg class="map-pin" aria-hidden="true"><use href="#i-pin"/></svg>
             <span class="map-hold-title">Peta belum dimuat</span>
             <span class="map-hold-sub">OpenStreetMap hanya dihubungi kalau kamu menekan tombol di bawah.</span>
             <span class="map-hold-action">Tampilkan peta</span>
@@ -135,7 +132,7 @@
           <p>Supaya ada petugas yang bisa membantu, datang pada jam kerja sekolah. Untuk keperluan administrasi, datang lebih awal memberi waktu lebih longgar sebelum kegiatan belajar selesai.</p>
           <p>Kalau membawa dokumen, susun dalam satu map agar pemeriksaan lebih cepat. Daftar dokumen pendaftaran ada di <a href="{{ route('ppdb') }}">halaman PPDB</a>.</p>
           <p class="note">Bisa datang tanpa menelepon, tetapi tidak ada jaminan ada petugas yang menerima. Telepon dulu lebih aman, terutama untuk urusan pendaftaran.</p>
-          <a class="btn btn--ghost" href="tel:+62318538447">Telepon sebelum datang <svg class="i i--arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          <a class="btn btn--ghost" href="tel:+62318538447">Telepon sebelum datang</a>
         </div>
       </div>
     </div>

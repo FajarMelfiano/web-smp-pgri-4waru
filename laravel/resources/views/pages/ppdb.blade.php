@@ -17,7 +17,7 @@
       <h1>Penerimaan siswa baru</h1>
       <p class="lead">Pendaftaran dilakukan di kantor sekolah. Halaman ini menjelaskan alurnya, dokumen yang perlu disiapkan, dan menyusun pesan yang bisa kamu kirim sendiri.</p>
       <div class="hero__actions no-print">
-        <a class="btn btn--primary" href="tel:+62318538447">Telepon sekolah <svg class="i i--arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <a class="btn btn--primary" href="tel:+62318538447">Telepon sekolah</a>
         @if(!empty($siteSettings['brosur_ppdb_path']))
           <a class="btn btn--ghost" href="{{ asset('storage/'.$siteSettings['brosur_ppdb_path']) }}" target="_blank" rel="noopener">Unduh Brosur PPDB <svg class="i" aria-hidden="true"><use href="#i-upright"/></svg></a>
         @endif

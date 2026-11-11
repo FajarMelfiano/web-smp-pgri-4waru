@@ -16,7 +16,7 @@
       <h1>Suara &amp; ulasan <span class="accent">para alumni</span></h1>
       <p class="lead">Sejak berdiri pada tahun 1979 di Jalan Anggrek No. 109, ribuan lulusan telah tumbuh bersama SMP PGRI 4 Waru. Baca kesan mereka atau kirimkan cerita Anda sendiri.</p>
       <div style="margin-top:1.5rem;display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap">
-        <a href="#tulis-ulasan" class="btn btn--primary">Tulis Ulasan Alumni <svg class="i i--arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <a href="#tulis-ulasan" class="btn btn--primary">Tulis Ulasan Alumni</a>
         <a href="#daftar-ulasan" class="btn btn--ghost">Lihat Cerita Lulusan</a>
       </div>
     </div>
@@ -170,7 +170,7 @@
 
           <div style="margin-top:1.35rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem">
             <span style="font-size:0.84rem;color:var(--ink-3)">Ulasan yang dikirim akan dimoderasi oleh pengurus sekolah.</span>
-            <button type="submit" class="btn btn--primary">Kirim Ulasan Alumni <svg class="i i--arrow" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+            <button type="submit" class="btn btn--primary">Kirim Ulasan Alumni</button>
           </div>
         </form>
       </div>

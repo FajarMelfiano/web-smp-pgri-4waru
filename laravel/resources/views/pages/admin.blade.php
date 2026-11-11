@@ -47,7 +47,7 @@
           <b class="adm-kpi__val">{{ $stats['diterima'] ?? 0 }}</b>
           <span class="adm-kpi__sub">Telah diverifikasi petugas</span>
         </div>
-        <span class="adm-kpi__icon" aria-hidden="true"><svg class="i"><use href="#i-check"/></svg></span>
+        <span class="adm-kpi__icon" aria-hidden="true"><svg class="i"><use href="#i-seal-check"/></svg></span>
       </article>
 
       <article class="adm-kpi">
@@ -65,7 +65,7 @@
           <b class="adm-kpi__val">{{ $stats['berita_total'] ?? 0 }}</b>
           <span class="adm-kpi__sub">{{ $stats['berita_terbit'] ?? 0 }} tayang · {{ $stats['berita_draf'] ?? 0 }} draf</span>
         </div>
-        <span class="adm-kpi__icon" aria-hidden="true"><svg class="i"><use href="#i-file"/></svg></span>
+        <span class="adm-kpi__icon" aria-hidden="true"><svg class="i"><use href="#i-newspaper"/></svg></span>
       </article>
     </div>
   </section>
@@ -87,7 +87,7 @@
       </a>
 
       <a class="adm-quick-card" href="{{ route('admin.berita') }}">
-        <span class="adm-quick-card__icon" aria-hidden="true"><svg class="i"><use href="#i-file"/></svg></span>
+        <span class="adm-quick-card__icon" aria-hidden="true"><svg class="i"><use href="#i-newspaper"/></svg></span>
         <span class="adm-quick-card__body">
           <b class="adm-quick-card__title">Berita &amp; Pengumuman</b>
           <span class="adm-quick-card__desc">Tulis kabar sekolah baru, unggah foto sampul, dan atur status tayang/draf.</span>
@@ -105,7 +105,7 @@
       </a>
 
       <a class="adm-quick-card" href="{{ route('admin.alumni') }}">
-        <span class="adm-quick-card__icon" aria-hidden="true"><svg class="i"><use href="#i-users"/></svg></span>
+        <span class="adm-quick-card__icon" aria-hidden="true"><svg class="i"><use href="#i-chat"/></svg></span>
         <span class="adm-quick-card__body">
           <b class="adm-quick-card__title">Moderasi Ulasan Alumni</b>
           <span class="adm-quick-card__desc">Verifikasi testimoni yang dikirim alumni ({{ $stats['alumni_terbit'] ?? 0 }} tayang · {{ $stats['alumni_menunggu'] ?? 0 }} menunggu).</span>
@@ -141,7 +141,7 @@
       </a>
 
       <a class="adm-quick-card" href="{{ route('admin.ekspor.pendaftar') }}">
-        <span class="adm-quick-card__icon" aria-hidden="true"><svg class="i"><use href="#i-check"/></svg></span>
+        <span class="adm-quick-card__icon" aria-hidden="true"><svg class="i"><use href="#i-download"/></svg></span>
         <span class="adm-quick-card__body">
           <b class="adm-quick-card__title">Ekspor Data PPDB (CSV)</b>
           <span class="adm-quick-card__desc">Unduh rekapitulasi lengkap pendaftar untuk arsip panitia sekolah.</span>

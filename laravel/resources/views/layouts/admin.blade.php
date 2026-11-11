@@ -24,26 +24,7 @@
 <body>
 <a class="skip-link" href="#isi">Lompat ke isi halaman</a>
 
-<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
-  <defs>
-    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15m0 0-6-6m6 6-6 6"/></symbol>
-    <symbol id="i-upright" viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"/></symbol>
-    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
-    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
-    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/></symbol>
-    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z"/></symbol>
-    <symbol id="i-phone" viewBox="0 0 24 24"><path d="M6.4 3h3.1l1.5 3.9-2 1.5a12.4 12.4 0 0 0 6.6 6.6l1.5-2 3.9 1.5v3.1a2.5 2.5 0 0 1-2.8 2.5C10.5 19.6 4.4 13.5 3.9 5.8A2.5 2.5 0 0 1 6.4 3Z"/></symbol>
-    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
-    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.4-3 7.6-7 9-4-1.4-7-4.6-7-9V6Z"/><path d="m9 12 2 2 4-4"/></symbol>
-    <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 20c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/><path d="M16 5.5a3 3 0 0 1 0 5.8M17.5 15c2 .6 3 2.2 3 5"/></symbol>
-    <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 8 4.5-8 4.5-8-4.5Z"/><path d="m4 12 8 4.5 8-4.5M4 16.5 12 21l8-4.5"/></symbol>
-    <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></symbol>
-    <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></symbol>
-    <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></symbol>
-    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7"/></symbol>
-    <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="m21 15-5-5L5 20"/></symbol>
-  </defs>
-</svg>
+@include('partials.icons')
 
 <div class="adm-shell">
   <div class="adm-backdrop" data-adm-backdrop></div>
@@ -76,7 +57,7 @@
           </li>
           <li>
             <a class="adm-nav__link {{ request()->routeIs('admin.berita') ? 'is-active' : '' }}" href="{{ route('admin.berita') }}" @if(request()->routeIs('admin.berita')) aria-current="page" @endif>
-              <svg class="i" aria-hidden="true"><use href="#i-file"/></svg>
+              <svg class="i" aria-hidden="true"><use href="#i-newspaper"/></svg>
               <span>Berita &amp; Pengumuman</span>
               <span class="adm-nav__count">{{ $stats['berita_total'] ?? 0 }}</span>
             </a>
@@ -90,7 +71,7 @@
           </li>
           <li>
             <a class="adm-nav__link {{ request()->routeIs('admin.alumni') ? 'is-active' : '' }}" href="{{ route('admin.alumni') }}" @if(request()->routeIs('admin.alumni')) aria-current="page" @endif>
-              <svg class="i" aria-hidden="true"><use href="#i-users"/></svg>
+              <svg class="i" aria-hidden="true"><use href="#i-chat"/></svg>
               <span>Ulasan Alumni</span>
               <span class="adm-nav__count">{{ $stats['alumni_total'] ?? 0 }}</span>
             </a>
@@ -121,7 +102,7 @@
         <ul class="adm-nav__list">
           <li>
             <a class="adm-nav__link" href="{{ route('admin.ekspor.pendaftar') }}">
-              <svg class="i" aria-hidden="true"><use href="#i-check"/></svg>
+              <svg class="i" aria-hidden="true"><use href="#i-download"/></svg>
               <span>Ekspor CSV PPDB</span>
             </a>
           </li>

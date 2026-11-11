@@ -62,10 +62,7 @@
       <div class="blogger-topbar">
         <div class="blogger-topbar__left">
           <div class="blogger-mark" aria-hidden="true" title="Editor Berita SMP PGRI 4 Waru">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 20h9"/>
-              <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/>
-            </svg>
+            <svg aria-hidden="true"><use href="#i-pencil-mark"/></svg>
           </div>
           <div class="blogger-title-wrap">
             <div class="blogger-title-meta">
@@ -93,15 +90,15 @@
         <div class="blogger-topbar__actions">
           <div class="blogger-mode-switch" role="tablist" aria-label="Mode tampilan editor">
             <button type="button" class="blogger-mode-btn is-active" data-editor-mode="visual" role="tab" aria-selected="true">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+              <svg aria-hidden="true"><use href="#i-ed-visual"/></svg>
               <span>Tampilan Visual</span>
             </button>
             <button type="button" class="blogger-mode-btn" data-editor-mode="html" role="tab" aria-selected="false">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+              <svg aria-hidden="true"><use href="#i-ed-code"/></svg>
               <span>Tampilan HTML</span>
             </button>
             <button type="button" class="blogger-mode-btn" data-editor-mode="preview" role="tab" aria-selected="false">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg aria-hidden="true"><use href="#i-ed-eye"/></svg>
               <span>Pratinjau</span>
             </button>
           </div>
@@ -125,10 +122,10 @@
       <div class="blogger-toolbar" id="blogger-toolbar" role="toolbar" aria-label="Alat pemformatan teks berita">
         <div class="blogger-tool-group">
           <button type="button" class="blogger-tool-btn" data-cmd="undo" title="Urungkan (Ctrl+Z)" aria-label="Urungkan">
-            <svg viewBox="0 0 24 24"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg>
+            <svg aria-hidden="true"><use href="#i-ed-undo"/></svg>
           </button>
           <button type="button" class="blogger-tool-btn" data-cmd="redo" title="Ulangi (Ctrl+Y)" aria-label="Ulangi">
-            <svg viewBox="0 0 24 24"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 2.7"/></svg>
+            <svg aria-hidden="true"><use href="#i-ed-redo"/></svg>
           </button>
         </div>
 
@@ -165,19 +162,19 @@
 
         <div class="blogger-tool-group">
           <button type="button" class="blogger-tool-btn" data-cmd="justifyLeft" title="Rata Kiri" aria-label="Rata Kiri">
-            <svg viewBox="0 0 24 24"><line x1="21" y1="6" x2="3" y2="6"/><line x1="15" y1="12" x2="3" y2="12"/><line x1="17" y1="18" x2="3" y2="18"/></svg>
+            <svg aria-hidden="true"><use href="#i-ed-align-left"/></svg>
           </button>
           <button type="button" class="blogger-tool-btn" data-cmd="justifyCenter" title="Rata Tengah" aria-label="Rata Tengah">
-            <svg viewBox="0 0 24 24"><line x1="21" y1="6" x2="3" y2="6"/><line x1="17" y1="12" x2="7" y2="12"/><line x1="19" y1="18" x2="5" y2="18"/></svg>
+            <svg aria-hidden="true"><use href="#i-ed-align-center"/></svg>
           </button>
           <button type="button" class="blogger-tool-btn" data-cmd="insertUnorderedList" title="Daftar Poin" aria-label="Daftar Poin">
-            <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            <svg aria-hidden="true"><use href="#i-ed-list-ul"/></svg>
           </button>
           <button type="button" class="blogger-tool-btn" data-cmd="insertOrderedList" title="Daftar Bernomor" aria-label="Daftar Bernomor">
-            <svg viewBox="0 0 24 24"><line x1="10" y1="6" x2="21" y2="6"/><line x1="10" y1="12" x2="21" y2="12"/><line x1="10" y1="18" x2="21" y2="18"/><path d="M4 6h1v4"/><path d="M4 10h2"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg>
+            <svg aria-hidden="true"><use href="#i-ed-list-ol"/></svg>
           </button>
           <button type="button" class="blogger-tool-btn" data-cmd="formatBlock" data-val="BLOCKQUOTE" title="Kutipan" aria-label="Kutipan">
-            <svg viewBox="0 0 24 24"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg>
+            <svg aria-hidden="true"><use href="#i-ed-quote"/></svg>
           </button>
         </div>
 
@@ -185,15 +182,15 @@
 
         <div class="blogger-tool-group">
           <button type="button" class="blogger-tool-btn" id="btn-toggle-link-drawer" title="Sisipkan Tautan" aria-label="Sisipkan Tautan">
-            <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            <svg aria-hidden="true"><use href="#i-ed-link"/></svg>
             <span style="margin-left:0.28rem;font-size:0.76rem">Tautan</span>
           </button>
           <button type="button" class="blogger-tool-btn" id="btn-toggle-image-drawer" title="Sisipkan Foto ke Dalam Artikel" aria-label="Sisipkan Foto">
-            <svg viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+            <svg aria-hidden="true"><use href="#i-ed-image"/></svg>
             <span style="margin-left:0.28rem;font-size:0.76rem">Sisipkan Foto</span>
           </button>
           <button type="button" class="blogger-tool-btn" data-cmd="insertHorizontalRule" title="Garis Pemisah Bagian" aria-label="Garis Pemisah">
-            <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/></svg>
+            <svg aria-hidden="true"><use href="#i-ed-hr"/></svg>
           </button>
           <button type="button" class="blogger-tool-btn" data-cmd="removeFormat" title="Bersihkan Format" aria-label="Bersihkan Format">
             <span style="font-size:0.74rem">Tx</span>

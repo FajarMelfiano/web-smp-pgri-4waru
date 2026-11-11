@@ -197,11 +197,8 @@ img {
 .i {
   width: 20px;
   height: 20px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.75;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+  fill: currentColor;
+  stroke: none;
   flex: 0 0 auto;
 }
 
@@ -1102,7 +1099,6 @@ section[id] {
 .card__icon .i {
   width: 22px;
   height: 22px;
-  stroke-width: 2;
 }
 
 .card h3 {
@@ -1558,11 +1554,8 @@ section[id] {
   width: 44px;
   height: 44px;
   color: var(--red);
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+  fill: currentColor;
+  stroke: none;
 }
 
 .map-hold-title {
@@ -1634,8 +1627,6 @@ section[id] {
   width: 18px;
   height: 18px;
   color: #fff;
-  stroke: currentColor;
-  stroke-width: 2;
 }
 
 .social-pill b {
@@ -2058,12 +2049,17 @@ section[id] {
   appearance: none;
   -webkit-appearance: none;
   padding-right: 2.35rem;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b6b74' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20256%20256%22%3E%3Cpath%20fill=%22%236b6b74%22%20d=%22m216.49%20104.49l-80%2080a12%2012%200%200%201-17%200l-80-80a12%2012%200%200%201%2017-17L128%20159l71.51-71.52a12%2012%200%200%201%2017%2017Z%22/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 0.8rem center;
   background-size: 16px 16px;
   cursor: pointer;
   font-weight: 600;
+}
+
+[data-theme="dark"] .field select,
+[data-theme="dark"] .adm-select {
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20256%20256%22%3E%3Cpath%20fill=%22%239c9ca6%22%20d=%22m216.49%20104.49l-80%2080a12%2012%200%200%201-17%200l-80-80a12%2012%200%200%201%2017-17L128%20159l71.51-71.52a12%2012%200%200%201%2017%2017Z%22/%3E%3C/svg%3E");
 }
 
 .adm-select {
@@ -3367,6 +3363,8 @@ section[id] {
   color: var(--ink-3);
   width: 16px;
   height: 16px;
+  fill: currentColor;
+  stroke: none;
   flex: 0 0 auto;
   margin-top: 0.15rem;
   transition: transform 0.18s, color 0.18s;
@@ -3701,6 +3699,33 @@ section[id] {
   flex: 1 1 auto;
 }
 
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  align-self: flex-start;
+  margin-top: auto;
+  color: var(--red);
+  font-size: 0.86rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.link-arrow .i {
+  width: 15px;
+  height: 15px;
+  transition: transform 0.2s var(--ease);
+}
+
+.link-arrow:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.link-arrow:hover .i--arrow {
+  transform: translateX(3px);
+}
+
 .article-cover {
   margin: 0 0 2rem;
   border-radius: var(--r-lg);
@@ -4017,6 +4042,8 @@ section[id] {
 .blogger-mark svg {
   width: 20px;
   height: 20px;
+  fill: currentColor;
+  stroke: none;
 }
 
 .blogger-title-wrap {
@@ -4096,6 +4123,14 @@ section[id] {
   transition: background 0.18s, color 0.18s;
 }
 
+.blogger-mode-btn svg {
+  width: 15px;
+  height: 15px;
+  fill: currentColor;
+  stroke: none;
+  flex: 0 0 auto;
+}
+
 .blogger-mode-btn.is-active {
   background: var(--surface);
   color: var(--red);
@@ -4160,11 +4195,8 @@ section[id] {
 .blogger-tool-btn svg {
   width: 16px;
   height: 16px;
-  stroke: currentColor;
-  stroke-width: 2;
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+  fill: currentColor;
+  stroke: none;
 }
 
 .blogger-format-select {
@@ -4173,9 +4205,10 @@ section[id] {
   border: 1px solid var(--line);
   border-radius: 8px;
   background-color: var(--surface);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236b6b74' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20256%20256%22%3E%3Cpath%20fill=%22%236b6b74%22%20d=%22m216.49%20104.49l-80%2080a12%2012%200%200%201-17%200l-80-80a12%2012%200%200%201%2017-17L128%20159l71.51-71.52a12%2012%200%200%201%2017%2017Z%22/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 0.5rem center;
+  background-size: 14px 14px;
   appearance: none;
   -webkit-appearance: none;
   color: var(--ink);
@@ -4183,6 +4216,10 @@ section[id] {
   font-size: 0.8rem;
   font-weight: 700;
   cursor: pointer;
+}
+
+[data-theme="dark"] .blogger-format-select {
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20256%20256%22%3E%3Cpath%20fill=%22%239c9ca6%22%20d=%22m216.49%20104.49l-80%2080a12%2012%200%200%201-17%200l-80-80a12%2012%200%200%201%2017-17L128%20159l71.51-71.52a12%2012%200%200%201%2017%2017Z%22/%3E%3C/svg%3E");
 }
 
 .blogger-toolbar__stats {
@@ -4968,7 +5005,6 @@ body.has-lightbox {
 .doc-check-box .i {
   width: 14px;
   height: 14px;
-  stroke-width: 2.6;
 }
 
 .doc-check-input:checked + .doc-check-box {

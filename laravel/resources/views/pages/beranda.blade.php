@@ -42,7 +42,7 @@
     <p class="hero__lead">{{ $siteSettings['hero_deskripsi'] ?? 'Sekolah swasta di bawah YPLP DASMEN PGRI Jawa Timur. Alamatnya tidak pernah pindah dari Jalan Anggrek No. 109, dan kegiatan belajar berlangsung pagi hari, enam hari dalam seminggu.' }}</p>
 
     <div class="hero__actions">
-      <a class="btn btn--primary" href="{{ route('ppdb') }}">Alur pendaftaran <svg class="i i--arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+      <a class="btn btn--primary" href="{{ route('ppdb') }}">Alur pendaftaran</a>
       <a class="btn btn--ghost" href="{{ route('profil') }}">Kenali sekolah</a>
     </div>
 
@@ -69,8 +69,6 @@
         </button>
       @endif
     </p>
-  </div>
-</section>
   </div>
 </section>
 
@@ -151,7 +149,7 @@
             <span class="chip chip--static">Keterampilan</span>
           </div>
         </div>
-        <a class="btn btn--ghost" href="{{ route('akademik') }}">Lihat halaman akademik <svg class="i i--arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <a class="btn btn--ghost" href="{{ route('akademik') }}">Lihat halaman akademik</a>
       </div>
     </div>
 
@@ -182,7 +180,7 @@
             <span class="chip chip--static">Kalender akademik</span>
           </div>
         </div>
-        <a class="btn btn--ghost" href="{{ route('akademik') }}#penilaian">Cara penilaian <svg class="i i--arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <a class="btn btn--ghost" href="{{ route('akademik') }}#penilaian">Cara penilaian</a>
       </div>
     </div>
   </div>
@@ -201,7 +199,7 @@
         <h2 id="ppdb">Pendaftaran berlangsung <span class="accent">di kantor sekolah</span></h2>
         <p>Empat langkah, tanpa pendaftaran daring dan tanpa biaya yang ditagih lewat situs ini. Halaman PPDB membantu kamu menyiapkan pertanyaan sebelum datang.</p>
         <div class="banner__actions">
-          <a class="btn btn--primary" href="{{ route('ppdb') }}">Buka halaman PPDB <svg class="i i--arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          <a class="btn btn--primary" href="{{ route('ppdb') }}">Buka halaman PPDB</a>
           <a class="btn btn--ghost" href="tel:+62318538447">Telepon sekolah</a>
         </div>
       </div>
@@ -254,7 +252,7 @@
     @endif
 
     <div class="sec-foot rise">
-      <a class="btn btn--ghost" href="{{ route('berita.index') }}">Lihat semua berita &amp; foto <svg class="i i--arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+      <a class="btn btn--ghost" href="{{ route('berita.index') }}">Lihat semua berita &amp; foto</a>
     </div>
   </div>
 </section>
@@ -360,7 +358,7 @@
     @endif
 
     <div class="sec-foot rise">
-      <a class="btn btn--primary" href="{{ route('alumni.index') }}">Buka halaman alumni &amp; tulis ulasan <svg class="i i--arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+      <a class="btn btn--primary" href="{{ route('alumni.index') }}">Buka halaman alumni &amp; tulis ulasan</a>
     </div>
   </div>
 </section>
@@ -406,10 +404,7 @@
         <button class="map-hold" type="button" data-map-hold
           data-src="https://www.openstreetmap.org/export/embed.html?bbox=112.7227%2C-7.3669%2C112.7427%2C-7.3569&amp;layer=mapnik&amp;marker=-7.3619%2C112.7327"
           data-title="Peta lokasi SMP PGRI 4 Waru di Jl. Anggrek No. 109, Kureksari, Waru, Sidoarjo">
-          <svg class="map-pin" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11Z" />
-            <circle cx="12" cy="10" r="2.6" />
-          </svg>
+          <svg class="map-pin" aria-hidden="true"><use href="#i-pin"/></svg>
           <span class="map-hold-title">Peta belum dimuat</span>
           <span class="map-hold-sub">OpenStreetMap hanya dihubungi kalau kamu menekan tombol di bawah.</span>
           <span class="map-hold-action">Tampilkan peta</span>

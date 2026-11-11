@@ -39,8 +39,8 @@
       </div>
 
       <div style="margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem">
-        <a href="{{ route('berita.index') }}" class="btn btn--ghost">← Kembali ke daftar berita</a>
-        <a href="{{ route('ppdb') }}" class="btn btn--primary">Informasi PPDB <svg class="i i--arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        <a href="{{ route('berita.index') }}" class="btn btn--ghost"><svg class="i" aria-hidden="true"><use href="#i-arrow-left"/></svg> Kembali ke daftar berita</a>
+        <a href="{{ route('ppdb') }}" class="btn btn--primary">Informasi PPDB</a>
       </div>
     </div>
   </section>
