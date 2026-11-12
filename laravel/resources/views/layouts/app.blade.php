@@ -18,8 +18,8 @@
     d.classList.add("js");
     var t = null;
     try { t = localStorage.getItem("smp4-theme"); } catch (e) {}
-    if (t !== "light" && t !== "dark") {
-      t = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    if (t === null || t === "") {
+      t = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
     }
     d.setAttribute("data-theme", t);
   })();

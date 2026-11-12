@@ -16,6 +16,7 @@
     if (!themeBtn) return;
     var dark = root.getAttribute("data-theme") === "dark";
     themeBtn.setAttribute("aria-pressed", dark ? "true" : "false");
+    root.setAttribute("color-scheme", dark ? "dark" : "light");
     if (themeLabel) themeLabel.textContent = dark ? "Terang" : "Gelap";
     themeBtn.setAttribute(
       "aria-label",

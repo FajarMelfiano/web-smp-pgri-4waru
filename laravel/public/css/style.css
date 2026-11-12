@@ -60,9 +60,13 @@
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
   --sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system,
     "Segoe UI", Roboto, sans-serif;
+
+  color-scheme: light;
 }
 
 [data-theme="dark"] {
+  color-scheme: dark;
+
   --red: #5bb4e5;
   --red-soft: rgba(91, 180, 229, 0.15);
   --red-soft-2: rgba(91, 180, 229, 0.26);
