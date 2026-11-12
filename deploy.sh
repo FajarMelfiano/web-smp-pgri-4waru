@@ -26,9 +26,28 @@ MARKER="$APP/storage/framework/.deployed-commit"
 bagian() { printf '\n\033[1m== %s\033[0m\n' "$*"; }
 gagal() { printf '\033[31m%s\033[0m\n' "$*" >&2; exit 1; }
 
+# Cron Job cPanel menjalankan skrip dengan PATH minimal, jadi PATH dan biner
+# PHP tidak boleh diasumsikan sudah benar.
+PATH="/usr/local/bin:/usr/bin:/bin:${PATH:-}"
+PHP_BIN="${PHP_BIN:-php}"
+if ! command -v "$PHP_BIN" >/dev/null 2>&1; then
+  for kandidat in \
+    /opt/cpanel/ea-php84/root/usr/bin/php \
+    /opt/cpanel/ea-php83/root/usr/bin/php \
+    /usr/local/bin/php \
+    /usr/bin/php; do
+    if [ -x "$kandidat" ]; then
+      PHP_BIN="$kandidat"
+      break
+    fi
+  done
+fi
+command -v "$PHP_BIN" >/dev/null 2>&1 \
+  || gagal "PHP CLI tidak ditemukan. Setel manual: PHP_BIN=/path/ke/php bash deploy.sh"
+
 # PHP CLI cPanel sering masih 8.1/8.2; composer.json minta ^8.3.
-php -r 'exit(version_compare(PHP_VERSION, "8.3.0", ">=") ? 0 : 1);' \
-  || gagal "PHP CLI $(php -r 'echo PHP_VERSION;') < 8.3. Setel di cPanel > MultiPHP Manager (bagian CLI)."
+"$PHP_BIN" -r 'exit(version_compare(PHP_VERSION, "8.3.0", ">=") ? 0 : 1);' \
+  || gagal "PHP CLI $("$PHP_BIN" -r 'echo PHP_VERSION;') < 8.3. Setel di cPanel > MultiPHP Manager (bagian CLI)."
 
 [ -f "$APP/.env" ] || gagal "$APP/.env tidak ada. Salin dari .env.example lalu isi kredensial database."
 [ -d "$APP/vendor" ] || gagal "$APP/vendor tidak ada. Jalankan dulu: php $ROOT/composer.phar install --no-dev --no-scripts"
@@ -63,22 +82,22 @@ cd "$APP"
 if printf '%s\n' "$BERUBAH" | grep -qE '^laravel/composer\.(json|lock)$'; then
   bagian "Dependensi berubah - composer install"
   [ -f "$ROOT/composer.phar" ] || gagal "composer.phar tidak ada di $ROOT."
-  php "$ROOT/composer.phar" install --no-dev --optimize-autoloader --no-scripts --no-interaction
+  "$PHP_BIN" "$ROOT/composer.phar" install --no-dev --optimize-autoloader --no-scripts --no-interaction
   # --no-scripts melewati post-autoload-dump, jadi discover dijalankan manual.
-  php artisan package:discover --ansi
+  "$PHP_BIN" artisan package:discover --ansi
 fi
 
 bagian "Bersihkan cache lama"
-php artisan optimize:clear
+"$PHP_BIN" artisan optimize:clear
 
 bagian "Migrasi database"
-php artisan migrate --force --no-interaction
+"$PHP_BIN" artisan migrate --force --no-interaction
 
 bagian "Bangun cache produksi"
 # route:cache TIDAK dipakai: routes/web.php memakai Closure (/, /ppdb,
 # /storage/{path}, /sitemap.xml) dan route:cache menolak route Closure.
-php artisan config:cache
-php artisan view:cache
+"$PHP_BIN" artisan config:cache
+"$PHP_BIN" artisan view:cache
 
 # symlink() dan exec() dimatikan di shared hosting ini, jadi
 # artisan storage:link gagal ("Call to undefined function exec"). ln tetap jalan.

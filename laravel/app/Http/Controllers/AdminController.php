@@ -607,7 +607,11 @@ class AdminController extends Controller
             'name' => ['required', 'string', 'max:120'],
             'email' => ['required', 'email', 'max:150', 'unique:users,email'],
             'role' => ['required', 'in:admin,operator'],
-            'password' => ['required', 'string', 'min:8'],
+            'password' => ['required', 'string', 'min:8', 'max:16', 'regex:/[A-Z]/', 'regex:/[a-z]/', 'regex:/[0-9]/'],
+        ], [
+            'password.min' => 'Kata sandi awal minimal 8 karakter.',
+            'password.max' => 'Kata sandi awal maksimal 16 karakter.',
+            'password.regex' => 'Kata sandi awal harus memuat huruf besar, huruf kecil, dan minimal satu angka.',
         ]);
 
         User::query()->create([

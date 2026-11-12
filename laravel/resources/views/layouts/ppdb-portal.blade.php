@@ -59,6 +59,9 @@
         <span>Portal PPDB {{ $siteSettings['tahun_ajaran'] ?? '2026/2027' }}</span>
       </span>
     </a>
+    <button class="adm-drawer-close" type="button" data-adm-close aria-label="Tutup menu">
+      <svg class="i" aria-hidden="true"><use href="#i-close"/></svg>
+    </button>
 
     <nav class="adm-nav" aria-label="Navigasi tahapan PPDB">
       <div class="adm-nav__group">
@@ -160,6 +163,13 @@
             <a class="adm-nav__link {{ request()->routeIs('ppdb.portal.bantuan') ? 'is-active' : '' }}" href="{{ route('ppdb.portal.bantuan') }}" @if(request()->routeIs('ppdb.portal.bantuan')) aria-current="page" @endif>
               <svg class="i" aria-hidden="true"><use href="#i-question"/></svg>
               <span>Bantuan</span>
+            </a>
+          </li>
+
+          <li>
+            <a class="adm-nav__link {{ request()->routeIs('ppdb.portal.akun*') ? 'is-active' : '' }}" href="{{ route('ppdb.portal.akun') }}" @if(request()->routeIs('ppdb.portal.akun*')) aria-current="page" @endif>
+              <svg class="i" aria-hidden="true"><use href="#i-lock"/></svg>
+              <span>Akun &amp; Kata Sandi</span>
             </a>
           </li>
         </ul>

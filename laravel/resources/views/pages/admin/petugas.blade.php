@@ -19,6 +19,13 @@
     </div>
   @endif
 
+  @if($errors->has('new_password'))
+    <div class="adm-alert adm-alert--error" role="alert">
+      <svg class="i" aria-hidden="true"><use href="#i-warning"/></svg>
+      <span>{{ $errors->first('new_password') }}</span>
+    </div>
+  @endif
+
   <div class="adm-grid-2">
     <section class="adm-panel" aria-labelledby="daftar-petugas-heading">
       <div class="adm-panel__head">
@@ -53,11 +60,34 @@
                 </td>
                 <td>
                   @if(auth()->user()?->role === 'admin' && auth()->id() !== $user->id)
-                    <form method="POST" action="{{ route('admin.petugas.destroy', $user) }}" class="adm-inline-form">
-                      @csrf
-                      @method('DELETE')
-                      <button type="submit" class="btn btn--quiet btn--sm adm-btn-danger">Hapus Akun</button>
-                    </form>
+                    <div class="adm-row-actions">
+                      <details class="adm-reset" @if((string) old('_reset_target') === (string) $user->id) open @endif>
+                        <summary>Ganti sandi</summary>
+                        <form method="POST" action="{{ route('admin.petugas.password', $user) }}" class="adm-reset__body" novalidate>
+                          @csrf
+                          <input type="hidden" name="_reset_target" value="{{ $user->id }}">
+                          <p class="adm-reset__hint">Sandi baru untuk {{ $user->name }}. Beri tahu yang bersangkutan setelah disimpan.</p>
+                          <div class="pw-wrap">
+                            <input name="new_password" type="password" autocomplete="new-password" placeholder="Sandi baru" aria-label="Kata sandi baru untuk {{ $user->name }}" required>
+                            <button type="button" class="pw-toggle" data-pw-toggle aria-pressed="false" aria-label="Tampilkan kata sandi baru">
+                              <svg class="i" aria-hidden="true"><use href="#i-eye"/></svg>
+                            </button>
+                          </div>
+                          <div class="pw-wrap">
+                            <input name="new_password_confirmation" type="password" autocomplete="new-password" placeholder="Ulangi sandi baru" aria-label="Ulangi kata sandi baru untuk {{ $user->name }}" required>
+                          </div>
+                          <button type="submit" class="btn btn--primary btn--sm">Simpan sandi</button>
+                        </form>
+                      </details>
+
+                      <form method="POST" action="{{ route('admin.petugas.destroy', $user) }}" class="adm-inline-form">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn--quiet btn--sm adm-btn-danger">Hapus Akun</button>
+                      </form>
+                    </div>
+                  @elseif(auth()->id() === $user->id)
+                    <a class="btn btn--ghost btn--sm" href="{{ route('admin.account') }}">Ganti sandi saya</a>
                   @else
                     <span class="adm-cell-sub">Terlindungi</span>
                   @endif
@@ -105,8 +135,8 @@
             </div>
 
             <div class="field @error('password') has-error @enderror">
-              <label for="petugas-password">Kata sandi awal (min. 8 karakter)</label>
-              <input id="petugas-password" name="password" type="password" placeholder="Minimal 8 karakter" required>
+              <label for="petugas-password">Kata sandi awal (8 - 16 karakter)</label>
+              <input id="petugas-password" name="password" type="password" placeholder="Huruf besar, huruf kecil, dan angka" autocomplete="new-password" required>
               @error('password')
                 <span class="error">{{ $message }}</span>
               @enderror

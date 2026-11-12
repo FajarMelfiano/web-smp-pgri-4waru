@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\AdminAccountController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminPasswordResetController;
 use App\Http\Controllers\AlumniController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BeritaController;
+use App\Http\Controllers\PpdbAccountController;
 use App\Http\Controllers\PpdbAuthController;
 use App\Http\Controllers\PpdbController;
 use App\Http\Controllers\PpdbPasswordResetController;
@@ -98,6 +100,9 @@ Route::middleware('auth:ppdb')->prefix('ppdb/portal')->name('ppdb.portal')->grou
     Route::get('/kartu-peserta', [PpdbPortalController::class, 'kartuPeserta'])->name('.kartu-peserta');
     Route::get('/pengumuman', [PpdbPortalController::class, 'pengumuman'])->name('.pengumuman');
     Route::get('/bantuan', [PpdbPortalController::class, 'bantuan'])->name('.bantuan');
+
+    Route::get('/akun', [PpdbAccountController::class, 'edit'])->name('.akun');
+    Route::post('/akun/sandi', [PpdbAccountController::class, 'updatePassword'])->middleware('throttle:6,1')->name('.akun.password');
 });
 
 Route::get('/kontak', fn () => view('pages.kontak'))->name('kontak');
@@ -192,4 +197,9 @@ Route::middleware('auth:web')->group(function (): void {
 
     Route::get('/admin/pengaturan', [AdminController::class, 'pengaturan'])->name('admin.pengaturan');
     Route::post('/admin/pengaturan', [AdminController::class, 'updateSettings'])->name('admin.pengaturan.update');
+
+    Route::get('/admin/akun', [AdminAccountController::class, 'edit'])->name('admin.account');
+    Route::post('/admin/akun/sandi', [AdminAccountController::class, 'updatePassword'])->middleware('throttle:6,1')->name('admin.account.password');
+    Route::post('/admin/petugas/{user}/sandi', [AdminAccountController::class, 'resetPetugasPassword'])->middleware(['role:admin', 'throttle:10,1'])->name('admin.petugas.password');
+    Route::post('/admin/ppdb/online/{pendaftaran}/akun/sandi', [AdminAccountController::class, 'resetPpdbPassword'])->middleware(['role:admin', 'throttle:10,1'])->name('admin.ppdb.online.password');
 });

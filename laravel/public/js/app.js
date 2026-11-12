@@ -883,19 +883,58 @@
 
   if (admToggle && admSidebar && !admToggle.hasAttribute("data-adm-bound")) {
     admToggle.setAttribute("data-adm-bound", "true");
-    var setAdmOpen = function (open) {
+    var admMobile = window.matchMedia("(max-width: 920px)");
+
+    var setAdmOpen = function (open, returnFocus) {
       admSidebar.classList.toggle("is-open", open);
       if (admBackdrop) admBackdrop.classList.toggle("is-open", open);
       admToggle.setAttribute("aria-expanded", open ? "true" : "false");
+      // Di ponsel sidebar menutup layar penuh: halaman di belakangnya
+      // dikunci supaya tidak ikut tergulir saat menu digeser.
+      document.body.classList.toggle("has-adm-open", open);
+      if (!open && returnFocus) admToggle.focus();
     };
+
     admToggle.addEventListener("click", function () {
-      setAdmOpen(!admSidebar.classList.contains("is-open"));
+      setAdmOpen(!admSidebar.classList.contains("is-open"), false);
     });
+
     if (admBackdrop) {
       admBackdrop.addEventListener("click", function () {
-        setAdmOpen(false);
+        setAdmOpen(false, true);
       });
     }
+
+    // Tombol "×" di dalam laci: cara tutup yang jelas tanpa menyentuh area
+    // di belakang laci.
+    var admCloseBtns = [].slice.call(admSidebar.querySelectorAll("[data-adm-close]"));
+    admCloseBtns.forEach(function (b) {
+      b.addEventListener("click", function () {
+        setAdmOpen(false, true);
+      });
+    });
+
+    // Tautan menu yang diklik menutup menunya dulu, jadi pengguna langsung
+    // melihat halaman tujuan, bukan sidebar yang tertinggal terbuka.
+    admSidebar.addEventListener("click", function (event) {
+      if (!admMobile.matches) return;
+      if (event.target.closest("a")) setAdmOpen(false, false);
+    });
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape" && admSidebar.classList.contains("is-open")) {
+        setAdmOpen(false, true);
+      }
+    });
+
+    // Perbesar jendela ke ukuran desktop: sidebar kembali jadi kolom tetap.
+    var resetAdmState = function () {
+      if (!admMobile.matches && admSidebar.classList.contains("is-open")) {
+        setAdmOpen(false, false);
+      }
+    };
+    if (admMobile.addEventListener) admMobile.addEventListener("change", resetAdmState);
+    else if (admMobile.addListener) admMobile.addListener(resetAdmState);
   }
 
   /* ---------- Accordion Menu Pendaftaran (Portal Siswa) ---------- */
@@ -1281,6 +1320,23 @@
       var file = input.files && input.files[0];
       label.textContent = file ? file.name : defaultText;
       wrap.classList.toggle("has-file", Boolean(file));
+    });
+  });
+
+  /* ---------- Tampilkan / sembunyikan kata sandi ---------- */
+
+  [].forEach.call(document.querySelectorAll("[data-pw-toggle]"), function (btn) {
+    var wrap = btn.closest(".pw-wrap");
+    var input = wrap ? wrap.querySelector("input") : null;
+    var icon = btn.querySelector("use");
+    if (!input || !icon) return;
+
+    btn.addEventListener("click", function () {
+      var tampil = input.type === "password";
+      input.type = tampil ? "text" : "password";
+      btn.setAttribute("aria-pressed", tampil ? "true" : "false");
+      btn.setAttribute("aria-label", tampil ? "Sembunyikan kata sandi" : "Tampilkan kata sandi");
+      icon.setAttribute("href", tampil ? "#i-eye-slash" : "#i-eye");
     });
   });
 })();

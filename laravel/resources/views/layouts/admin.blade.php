@@ -43,6 +43,9 @@
         <span>Panel Administrasi</span>
       </span>
     </a>
+    <button class="adm-drawer-close" type="button" data-adm-close aria-label="Tutup menu">
+      <svg class="i" aria-hidden="true"><use href="#i-close"/></svg>
+    </button>
 
     <nav class="adm-nav" aria-label="Navigasi modul admin">
       <div class="adm-nav__group">
@@ -98,6 +101,12 @@
             <a class="adm-nav__link {{ request()->routeIs('admin.pengaturan') ? 'is-active' : '' }}" href="{{ route('admin.pengaturan') }}" @if(request()->routeIs('admin.pengaturan')) aria-current="page" @endif>
               <svg class="i" aria-hidden="true"><use href="#i-settings"/></svg>
               <span>Pengaturan Situs</span>
+            </a>
+          </li>
+          <li>
+            <a class="adm-nav__link {{ request()->routeIs('admin.account') ? 'is-active' : '' }}" href="{{ route('admin.account') }}" @if(request()->routeIs('admin.account')) aria-current="page" @endif>
+              <svg class="i" aria-hidden="true"><use href="#i-lock"/></svg>
+              <span>Akun &amp; Kata Sandi</span>
             </a>
           </li>
         </ul>
@@ -176,24 +185,5 @@
 </div>
 
 <script src="/js/app.js" defer></script>
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    var btn = document.querySelector("[data-adm-toggle]");
-    var sidebar = document.getElementById("adm-sidebar");
-    var backdrop = document.querySelector("[data-adm-backdrop]");
-    if (!btn || !sidebar) return;
-    function setOpen(open) {
-      sidebar.classList.toggle("is-open", open);
-      if (backdrop) backdrop.classList.toggle("is-open", open);
-      btn.setAttribute("aria-expanded", open ? "true" : "false");
-    }
-    btn.addEventListener("click", function () {
-      setOpen(!sidebar.classList.contains("is-open"));
-    });
-    if (backdrop) {
-      backdrop.addEventListener("click", function () { setOpen(false); });
-    }
-  });
-</script>
 </body>
 </html>

@@ -2825,6 +2825,10 @@ section[id] {
   min-width: 0;
 }
 
+.adm-drawer-close {
+  display: none;
+}
+
 .adm-sidebar-toggle {
   display: none;
 }
@@ -2844,12 +2848,21 @@ section[id] {
 .adm-crumbs b {
   color: var(--ink);
   font-weight: 700;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .adm-topbar__right {
   display: flex;
   align-items: center;
   gap: 0.6rem;
+}
+
+/* Label tombol topbar tidak boleh pecah dua baris: tingginya jadi beda-beda
+   dan topbar terlihat berantakan di layar sempit. */
+.adm-topbar__right .btn {
+  white-space: nowrap;
 }
 
 .adm-main {
@@ -3535,14 +3548,18 @@ section[id] {
     grid-template-columns: 1fr;
   }
 
+  /* Sidebar jadi laci: lebarnya ikut layar (maks 84vw) supaya tidak ada
+     bagian yang terpotong di ponsel sempit, dan isi di belakangnya dikunci. */
   .adm-sidebar {
     position: fixed;
-    left: -280px;
+    left: calc(-1 * min(300px, 84vw) - 12px);
     top: 0;
     bottom: 0;
-    width: 270px;
+    width: min(300px, 84vw);
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 0.5rem);
     visibility: hidden;
     pointer-events: none;
+    overscroll-behavior: contain;
     transition: left 0.25s var(--ease), visibility 0.25s;
     box-shadow: var(--shadow-lg);
   }
@@ -3551,6 +3568,10 @@ section[id] {
     left: 0;
     visibility: visible;
     pointer-events: auto;
+  }
+
+  body.has-adm-open {
+    overflow: hidden;
   }
 
   .adm-backdrop.is-open {
@@ -3565,12 +3586,58 @@ section[id] {
     display: inline-grid;
   }
 
+  /* Tombol tutup hanya relevan saat sidebar berupa laci. Ditempel di pojok
+     kanan atas supaya tidak menambah tinggi daftar menu. */
+  .adm-drawer-close {
+    position: absolute;
+    top: 1.15rem;
+    right: 0.9rem;
+    display: inline-grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    background: var(--surface);
+    color: var(--ink-2);
+    cursor: pointer;
+    z-index: 2;
+  }
+
+  .adm-brand {
+    padding-right: 3.75rem;
+  }
+
+  .adm-drawer-close:hover {
+    border-color: var(--ink-3);
+    color: var(--ink);
+  }
+
+  .adm-drawer-close .i {
+    width: 18px;
+    height: 18px;
+  }
+
   .adm-topbar {
     padding: 0.75rem 1rem;
   }
 
   .adm-main {
     padding: 1.15rem 1rem;
+  }
+
+  /* Sasaran sentuh minimal 44px: tab, tautan submenu, dan kendali filter
+     sebelumnya hanya 33-39px sehingga sering salah tekan. */
+  .adm-tabs a,
+  .adm-subtab,
+  .ppdb-subnav__link,
+  .adm-nav__link {
+    min-height: 44px;
+  }
+
+  .adm-filter-form .adm-input,
+  .adm-filter-form .adm-select {
+    min-height: 44px;
   }
 }
 
@@ -3604,6 +3671,13 @@ section[id] {
   .adm-filter-form .adm-select {
     width: 100%;
     min-width: 0;
+  }
+
+  /* Tombol pemformatan berita: 34px terlalu kecil untuk jari. */
+  .blogger-tool-btn,
+  .blogger-mode-btn {
+    min-width: 40px;
+    height: 40px;
   }
 }
 
@@ -5975,6 +6049,14 @@ body.has-lightbox {
   white-space: nowrap;
 }
 
+/* Di tablet chip identitas sekolah mendorong topbar jadi dua baris sehingga
+   tinggi header berubah-ubah. Identitas sekolah sudah ada di sidebar. */
+@media (max-width: 900px) {
+  .ppdb-topbar-chip--school {
+    display: none;
+  }
+}
+
 .ppdb-main {
   max-width: 1220px;
 }
@@ -7415,4 +7497,151 @@ body.has-lightbox {
     border: 2px solid #000 !important;
     box-shadow: none !important;
   }
+}
+
+/* ---------- Halaman Akun & Kata Sandi (Admin + Portal PPDB) ---------- */
+
+/* Tombol tampil/sembunyikan sandi: kolom sandi diketik di HP tanpa melihat,
+   jadi sering salah. Tombol ini 40px dan memakai ikon yang sudah ada. */
+.pw-wrap {
+  position: relative;
+  display: block;
+}
+
+.pw-wrap input {
+  width: 100%;
+  padding-right: 3.1rem;
+}
+
+.pw-toggle {
+  position: absolute;
+  top: 50%;
+  right: 0.3rem;
+  transform: translateY(-50%);
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--ink-3);
+  cursor: pointer;
+}
+
+.pw-toggle:hover {
+  background: var(--tint);
+  color: var(--ink);
+}
+
+.pw-toggle .i {
+  width: 19px;
+  height: 19px;
+}
+
+.pw-toggle[aria-pressed="true"] {
+  color: var(--red);
+}
+
+.adm-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  margin: 0;
+  color: var(--ink-2);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.adm-note .i {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  margin-top: 0.15rem;
+  color: var(--ink-3);
+}
+
+.adm-alert--error {
+  border-color: var(--red);
+  background: var(--surface);
+}
+
+.ppdb-inline-note {
+  margin: 1rem 0 0;
+  color: var(--ink-2);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+/* Reset sandi oleh admin: <details> per baris akun supaya formulir tidak
+   memenuhi tabel dan tetap bisa dibuka dengan keyboard. */
+.adm-row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.adm-reset {
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--surface);
+}
+
+.adm-reset[open] {
+  border-color: var(--ink-3);
+}
+
+.adm-reset > summary {
+  padding: 0.45rem 0.9rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--ink-2);
+  cursor: pointer;
+  list-style: none;
+}
+
+.adm-reset > summary::-webkit-details-marker {
+  display: none;
+}
+
+.adm-reset > summary::after {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-left: 0.5rem;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg) translateY(-2px);
+}
+
+.adm-reset[open] > summary::after {
+  transform: rotate(-135deg) translateY(-2px);
+}
+
+.adm-reset > summary:hover {
+  color: var(--ink);
+  background: var(--tint);
+  border-radius: var(--r-md);
+}
+
+.adm-reset__body {
+  display: grid;
+  gap: 0.5rem;
+  min-width: 15rem;
+  padding: 0.85rem 0.9rem 0.95rem;
+  border-top: 1px solid var(--line);
+}
+
+.adm-reset__hint {
+  margin: 0;
+  color: var(--ink-3);
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+.adm-reset__body .btn {
+  justify-content: center;
+  min-height: 42px;
 }

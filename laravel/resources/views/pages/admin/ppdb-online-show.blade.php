@@ -264,5 +264,68 @@
         @endif
       </div>
     </section>
+
+    @if(auth()->user()?->role === 'admin' && $pendaftaran->account)
+      <section class="adm-panel" aria-labelledby="akun-siswa-heading">
+        <div class="adm-panel__head">
+          <div class="adm-panel__title">
+            <h2 id="akun-siswa-heading">6. Keamanan Akun Portal Siswa</h2>
+          </div>
+        </div>
+        <div class="adm-panel__body">
+          <dl class="ppdb-kv-list" style="margin-bottom:1.1rem">
+            <div>
+              <dt>Nama Akun</dt>
+              <dd>{{ $pendaftaran->account->nama_lengkap }}</dd>
+            </div>
+            <div>
+              <dt>Email Masuk</dt>
+              <dd>{{ $pendaftaran->account->email }}</dd>
+            </div>
+            <div>
+              <dt>No. Pendaftaran</dt>
+              <dd>{{ $pendaftaran->no_pendaftaran }}</dd>
+            </div>
+          </dl>
+
+          @if($errors->has('new_password'))
+            <div class="adm-alert adm-alert--error" role="alert">
+              <svg class="i" aria-hidden="true"><use href="#i-warning"/></svg>
+              <span>{{ $errors->first('new_password') }}</span>
+            </div>
+          @endif
+
+          <form method="POST" action="{{ route('admin.ppdb.online.password', $pendaftaran) }}" novalidate>
+            @csrf
+            <div class="adm-form-grid-2">
+              <div class="field">
+                <label for="siswa-sandi-baru">Kata sandi baru</label>
+                <div class="pw-wrap">
+                  <input id="siswa-sandi-baru" name="new_password" type="password" autocomplete="new-password" required aria-describedby="siswa-sandi-hint">
+                  <button type="button" class="pw-toggle" data-pw-toggle aria-pressed="false" aria-label="Tampilkan kata sandi baru">
+                    <svg class="i" aria-hidden="true"><use href="#i-eye"/></svg>
+                  </button>
+                </div>
+              </div>
+              <div class="field">
+                <label for="siswa-sandi-ulang">Ulangi kata sandi baru</label>
+                <div class="pw-wrap">
+                  <input id="siswa-sandi-ulang" name="new_password_confirmation" type="password" autocomplete="new-password" required>
+                  <button type="button" class="pw-toggle" data-pw-toggle aria-pressed="false" aria-label="Tampilkan ulangi kata sandi">
+                    <svg class="i" aria-hidden="true"><use href="#i-eye"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <span class="field-hint" id="siswa-sandi-hint">8 - 16 karakter, memuat huruf besar, huruf kecil, dan angka. Sampaikan sandi baru ini kepada siswa atau orang tuanya lewat WhatsApp setelah disimpan.</span>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn--primary">Simpan Sandi untuk Akun Ini</button>
+            </div>
+          </form>
+        </div>
+      </section>
+    @endif
   </div>
 @endsection
