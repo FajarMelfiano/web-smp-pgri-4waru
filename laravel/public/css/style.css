@@ -5077,29 +5077,29 @@ body.has-lightbox {
     bottom: 0;
     z-index: 70;
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    align-items: center;
-    padding: 0.35rem 0.5rem calc(0.35rem + env(safe-area-inset-bottom, 0px));
-    background: var(--head-bg);
+    grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 1.22fr);
+    align-items: stretch;
+    gap: 0.2rem;
+    padding: 0.3rem 0.45rem calc(0.3rem + env(safe-area-inset-bottom, 0px));
+    background: var(--surface);
     border-top: 1px solid var(--line);
-    backdrop-filter: saturate(180%) blur(16px);
-    -webkit-backdrop-filter: saturate(180%) blur(16px);
-    box-shadow: 0 -6px 24px rgba(9, 9, 11, 0.08);
+    box-shadow: 0 -12px 32px -24px rgba(24, 24, 27, 0.45);
   }
 
   .mobile-quickbar__item {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0.16rem;
-    min-height: 46px;
-    padding: 0.25rem 0.2rem;
+    gap: 0.22rem;
+    min-height: 50px;
+    padding: 0.4rem 0.15rem 0.3rem;
     border-radius: 10px;
     color: var(--ink-2);
-    font-size: 0.67rem;
-    font-weight: 700;
-    line-height: 1.1;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.15;
     white-space: nowrap;
     text-align: center;
     text-decoration: none;
@@ -5107,20 +5107,61 @@ body.has-lightbox {
   }
 
   .mobile-quickbar__item .i {
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
   }
 
+  .mobile-quickbar__item:hover {
+    color: var(--ink);
+  }
+
+  /* Halaman aktif ditandai dua sinyal — warna dan garis aksen di atas —
+     supaya tidak bergantung pada warna saja. */
   .mobile-quickbar__item.is-active {
     color: var(--red);
+    font-weight: 700;
   }
 
+  .mobile-quickbar__item.is-active::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 26px;
+    height: 3px;
+    border-radius: 0 0 3px 3px;
+    background: var(--red);
+    transform: translateX(-50%);
+  }
+
+  .mobile-quickbar__item:focus-visible {
+    outline: 2px solid var(--red);
+    outline-offset: 2px;
+  }
+
+  /* --red dipakai untuk teks/aksen, --red-solid untuk permukaan terisi:
+     satu token satu tugas, dan keduanya punya pasangan kontrasnya sendiri
+     di tema gelap. */
   .mobile-quickbar__item--cta {
     background: var(--red-solid);
-    color: #ffffff !important;
-    border-radius: 12px;
-    margin-inline: 0.15rem;
-    box-shadow: var(--shadow-red);
+    color: #ffffff;
+    border-radius: 10px;
+    font-weight: 700;
+    box-shadow: 0 8px 18px -12px rgba(14, 94, 143, 0.8);
+  }
+
+  .mobile-quickbar__item--cta:hover {
+    color: #ffffff;
+    filter: brightness(1.1);
+  }
+
+  .mobile-quickbar__item--cta.is-active {
+    color: #ffffff;
+    box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.6);
+  }
+
+  .mobile-quickbar__item--cta.is-active::before {
+    display: none;
   }
 
   .back-top {
@@ -5283,7 +5324,14 @@ body.has-lightbox {
   }
 
   .mobile-quickbar__item {
-    font-size: 0.62rem;
+    gap: 0.18rem;
+    padding-inline: 0.05rem;
+    font-size: 0.7rem;
+  }
+
+  .mobile-quickbar__item .i {
+    width: 18px;
+    height: 18px;
   }
 }
 

@@ -125,26 +125,22 @@
   </div>
 </footer>
 
-<nav class="mobile-quickbar" aria-label="Aksi cepat perangkat seluler">
-  <a class="mobile-quickbar__item @if(request()->routeIs('beranda')) is-active @endif" href="{{ route('beranda') }}">
+<nav class="mobile-quickbar" aria-label="Navigasi utama perangkat seluler">
+  <a class="mobile-quickbar__item @if(request()->routeIs('beranda')) is-active @endif" href="{{ route('beranda') }}"@if(request()->routeIs('beranda')) aria-current="page"@endif>
     <svg class="i" aria-hidden="true"><use href="#i-home"/></svg>
     <span>Beranda</span>
   </a>
-  <a class="mobile-quickbar__item @if(request()->routeIs('berita.*')) is-active @endif" href="{{ route('berita.index') }}">
+  <a class="mobile-quickbar__item @if(request()->routeIs('berita.*')) is-active @endif" href="{{ route('berita.index') }}"@if(request()->routeIs('berita.*')) aria-current="page"@endif>
     <svg class="i" aria-hidden="true"><use href="#i-newspaper"/></svg>
     <span>Berita</span>
   </a>
-  <a class="mobile-quickbar__item mobile-quickbar__item--cta @if(request()->routeIs('ppdb')) is-active @endif" href="{{ route('ppdb') }}">
-    <svg class="i" aria-hidden="true"><use href="#i-form"/></svg>
-    <span>Daftar PPDB</span>
-  </a>
-  <a class="mobile-quickbar__item @if(request()->routeIs('alumni.*')) is-active @endif" href="{{ route('alumni.index') }}">
+  <a class="mobile-quickbar__item @if(request()->routeIs('alumni.*')) is-active @endif" href="{{ route('alumni.index') }}"@if(request()->routeIs('alumni.*')) aria-current="page"@endif>
     <svg class="i" aria-hidden="true"><use href="#i-graduate"/></svg>
     <span>Alumni</span>
   </a>
-  <a class="mobile-quickbar__item" href="tel:+62318538447">
-    <svg class="i" aria-hidden="true"><use href="#i-phone"/></svg>
-    <span>Telepon</span>
+  <a class="mobile-quickbar__item mobile-quickbar__item--cta @if(request()->routeIs('ppdb*')) is-active @endif" href="{{ route('ppdb') }}"@if(request()->routeIs('ppdb*')) aria-current="page"@endif>
+    <svg class="i" aria-hidden="true"><use href="#i-form"/></svg>
+    <span>Daftar PPDB</span>
   </a>
 </nav>
 
