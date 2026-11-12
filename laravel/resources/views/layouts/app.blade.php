@@ -5,8 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>@yield('title', 'SMP PGRI 4 Waru — Sekolah menengah pertama di Kureksari, Sidoarjo')</title>
 <meta name="description" content="@yield('description', 'SMP PGRI 4 Waru berdiri sejak 1979 di Jl. Anggrek No. 109, Kureksari, Waru, Sidoarjo. Identitas sekolah, mata pelajaran, alur pendaftaran, dan lokasi.')">
+@php
+  // Versi ikut mtime berkas: setiap deploy CSS baru otomatis memaksa browser
+  // mengambil ulang, tanpa perlu user menekan Ctrl+Shift+R.
+  $cssBerkas = public_path('css/style.css');
+  $cssVersi = is_file($cssBerkas) ? filemtime($cssBerkas) : '1';
+@endphp
 <link rel="preload" href="/fonts/plus-jakarta-sans-var.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/style.css?v={{ $cssVersi }}">
 <link rel="icon" href="/images/logo-smp-pgri4-waru.png" type="image/png">
 <meta property="og:type" content="website">
 <meta property="og:title" content="@yield('og_title', 'SMP PGRI 4 Waru')">

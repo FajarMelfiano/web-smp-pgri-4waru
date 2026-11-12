@@ -2,11 +2,17 @@
 <html lang="id">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>@yield('title', 'Portal PPDB Online | ' . ($siteSettings['nama_sekolah'] ?? 'SMP PGRI 4 Waru'))</title>
 <meta name="description" content="@yield('description', 'Portal pendaftaran peserta didik baru (PPDB) online SMP PGRI 4 Waru.')">
 <link rel="preload" href="/fonts/plus-jakarta-sans-var.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/css/style.css">
+@php
+  // Versi ikut mtime berkas: setiap deploy CSS baru otomatis memaksa browser
+  // mengambil ulang, tanpa perlu user menekan Ctrl+Shift+R.
+  $cssBerkas = public_path('css/style.css');
+  $cssVersi = is_file($cssBerkas) ? filemtime($cssBerkas) : '1';
+@endphp
+<link rel="stylesheet" href="/css/style.css?v={{ $cssVersi }}">
 <link rel="icon" href="/images/logo-smp-pgri4-waru.png" type="image/png">
 <script>
   (function () {

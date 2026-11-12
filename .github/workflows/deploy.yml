@@ -1,0 +1,93 @@
+name: Deploy ke cPanel (git pull)
+
+# SSH ke server BELUM aktif (port 22 tertutup, cPanel Terminal tidak
+# menerima koneksi luar). Karena itu workflow ini sengaja hanya manual.
+# Deploy rutin memakai deploy.sh lewat Cron Job cPanel.
+on:
+  workflow_dispatch:
+
+# Dua push berdekatan tidak boleh menulis vendor/ dan cache bersamaan.
+concurrency:
+  group: deploy-cpanel
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Tarik kode & jalankan artisan di cPanel
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.CPANEL_HOST }}
+          username: ${{ secrets.CPANEL_USER }}
+          password: ${{ secrets.CPANEL_PASSWORD }}
+          # Kalau pakai SSH key, ganti `password:` dengan:
+          # key: ${{ secrets.CPANEL_SSH_KEY }}
+          # fingerprint: ${{ secrets.CPANEL_FINGERPRINT }}
+          port: 22
+          # Tanpa ini, kegagalan di tengah skrip dianggap sukses oleh action.
+          script_stop: true
+          command_timeout: 10m
+          script: |
+            set -euo pipefail
+
+            ROOT=/home/smpd9711/public_html/web-smp-pgri-4waru
+            APP="$ROOT/laravel"
+
+            # Laravel 13 butuh PHP >= 8.3. CLI cPanel sering masih 8.1/8.2.
+            php -r 'exit(version_compare(PHP_VERSION, "8.3.0", ">=") ? 0 : 1);' \
+              || { echo "PHP CLI $(php -r 'echo PHP_VERSION;') < 8.3. Setel lewat cPanel > MultiPHP Manager."; exit 1; }
+
+            cd "$ROOT"
+
+            # `.env`, storage/app, dan public/storage tidak terlacak git, jadi
+            # reset --hard tidak menyentuh data pendaftar maupun kredensial.
+            git fetch --prune origin
+            git checkout -f -B main origin/main
+            git log -1 --format='deploy %h %s'
+
+            cd "$APP"
+
+            # composer.phar ada di root repo, bukan di laravel/
+            php ../composer.phar install \
+              --no-dev --optimize-autoloader --no-scripts --no-interaction
+
+            # Pengganti post-autoload-dump yang dilewati --no-scripts
+            php artisan package:discover --ansi
+
+            php artisan optimize:clear
+            php artisan migrate --force --no-interaction
+
+            # route:cache TIDAK dipakai: routes/web.php memakai Closure
+            # (/, /ppdb, /storage/{path}, /sitemap.xml) dan route:cache
+            # menolak route berbasis Closure.
+            php artisan config:cache
+            php artisan view:cache
+
+            [ -L public/storage ] || php artisan storage:link
+
+            chmod -R u+rwX storage bootstrap/cache
+
+      - name: Cek situs benar-benar hidup
+        env:
+          SITE_URL: ${{ vars.SITE_URL || 'https://smppgri4waru.sch.id' }}
+        run: |
+          for i in 1 2 3; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' -m 20 "$SITE_URL/")
+            echo "GET / => $code"
+            if [ "$code" = "200" ]; then break; fi
+            sleep 5
+          done
+          [ "$code" = "200" ] || exit 1
+
+      - name: Pastikan .env tidak bisa diunduh
+        env:
+          SITE_URL: ${{ vars.SITE_URL || 'https://smppgri4waru.sch.id' }}
+        run: |
+          code=$(curl -s -o /dev/null -w '%{http_code}' -m 20 "$SITE_URL/.env")
+          echo "GET /.env => $code"
+          case "$code" in
+            403|404) ;;
+            *) echo "STOP: .env dapat diakses publik"; exit 1 ;;
+          esac
