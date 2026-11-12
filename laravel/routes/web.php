@@ -1,11 +1,13 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminPasswordResetController;
 use App\Http\Controllers\AlumniController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\PpdbAuthController;
 use App\Http\Controllers\PpdbController;
+use App\Http\Controllers\PpdbPasswordResetController;
 use App\Http\Controllers\PpdbPortalController;
 use App\Models\AlumniReview;
 use App\Models\Galeri;
@@ -63,6 +65,11 @@ Route::middleware('guest:ppdb')->group(function (): void {
     Route::post('/ppdb/daftar', [PpdbAuthController::class, 'register'])->middleware('throttle:15,1')->name('ppdb.daftar.store');
     Route::get('/ppdb/masuk', [PpdbAuthController::class, 'showLogin'])->name('ppdb.masuk');
     Route::post('/ppdb/masuk', [PpdbAuthController::class, 'login'])->middleware('throttle:15,1')->name('ppdb.masuk.attempt');
+
+    Route::get('/ppdb/lupa-sandi', [PpdbPasswordResetController::class, 'showRequestForm'])->name('ppdb.password.request');
+    Route::post('/ppdb/lupa-sandi', [PpdbPasswordResetController::class, 'sendResetLink'])->middleware('throttle:6,1')->name('ppdb.password.email');
+    Route::get('/ppdb/reset-sandi/{token}', [PpdbPasswordResetController::class, 'showResetForm'])->name('ppdb.password.reset');
+    Route::post('/ppdb/reset-sandi', [PpdbPasswordResetController::class, 'resetPassword'])->middleware('throttle:6,1')->name('ppdb.password.store');
 });
 
 Route::post('/ppdb/keluar', [PpdbAuthController::class, 'logout'])
@@ -132,6 +139,13 @@ Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:15
 Route::get('/admin/login', [AuthController::class, 'showLogin'])->name('admin.login');
 Route::post('/admin/login', [AuthController::class, 'login'])->middleware('throttle:15,1')->name('admin.login.attempt');
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:web')->name('logout');
+
+Route::middleware('guest:web')->group(function (): void {
+    Route::get('/admin/lupa-sandi', [AdminPasswordResetController::class, 'showRequestForm'])->name('admin.password.request');
+    Route::post('/admin/lupa-sandi', [AdminPasswordResetController::class, 'sendResetLink'])->middleware('throttle:6,1')->name('admin.password.email');
+    Route::get('/admin/reset-sandi/{token}', [AdminPasswordResetController::class, 'showResetForm'])->name('admin.password.reset');
+    Route::post('/admin/reset-sandi', [AdminPasswordResetController::class, 'resetPassword'])->middleware('throttle:6,1')->name('admin.password.store');
+});
 
 Route::middleware('auth:web')->group(function (): void {
     Route::get('/admin', [AdminController::class, 'dashboard'])->name('admin');

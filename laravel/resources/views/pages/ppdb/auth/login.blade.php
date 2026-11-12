@@ -153,7 +153,7 @@
 
         <div class="ppdb-auth-card__foot">
           <p>Belum memiliki akun pendaftaran? <a href="{{ route('ppdb.daftar') }}">Daftar akun PPDB</a></p>
-          <p class="ppdb-auth-help">Lupa kata sandi? Hubungi Panitia PPDB via <a href="https://wa.me/{{ $siteSettings['whatsapp_ppdb'] ?? '62318538447' }}" target="_blank" rel="noopener">WhatsApp Resmi</a> · <a href="{{ route('login') }}">Masuk Petugas Sekolah</a></p>
+          <p class="ppdb-auth-help">Lupa kata sandi? <a href="{{ route('ppdb.password.request') }}">Atur ulang lewat email</a> · <a href="https://wa.me/{{ $siteSettings['whatsapp_ppdb'] ?? '62318538447' }}" target="_blank" rel="noopener">WhatsApp Panitia</a> · <a href="{{ route('login') }}">Masuk Petugas Sekolah</a></p>
         </div>
       </div>
     </div>

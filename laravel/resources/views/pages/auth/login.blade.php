@@ -42,6 +42,10 @@
           <div class="form-actions">
             <button type="submit" class="btn btn--primary">Masuk ke panel</button>
           </div>
+
+          <p class="hint" style="margin-top:0.9rem">
+            Lupa kata sandi? <a href="{{ route('admin.password.request') }}">Minta tautan pengaturan kata sandi</a>
+          </p>
         </div>
       </form>
     </div>

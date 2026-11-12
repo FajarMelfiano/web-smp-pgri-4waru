@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Notifications\ResetPasswordCalonSiswa;
 use Database\Factories\PpdbAccountFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -46,6 +47,11 @@ class PpdbAccount extends Authenticatable
     public function pendaftaran(): HasOne
     {
         return $this->hasOne(PpdbPendaftaran::class, 'ppdb_account_id');
+    }
+
+    public function sendPasswordResetNotification($token): void
+    {
+        $this->notify(new ResetPasswordCalonSiswa($token));
     }
 
     public function whatsappLink(): string
