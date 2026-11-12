@@ -41,7 +41,9 @@ fi
 
 bagian "Terapkan $(git log -1 --format='%h' "$LAMA") -> $(git log -1 --format='%h %s' "$BARU")"
 # --ff-only: kalau ada commit lokal di server, berhenti daripada menimpanya.
-git merge --ff-only "$BARU"
+git merge --ff-only "$BARU" || gagal "Merge gagal. Kalau pesannya soal file
+untracked, ada berkas yang dibuat manual di server dengan nama sama. Hapus
+atau pindahkan dulu: git status --short"
 BERUBAH="$(git diff --name-only "$LAMA" "$BARU")"
 
 cd "$APP"
