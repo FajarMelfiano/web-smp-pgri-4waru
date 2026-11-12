@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>@yield('title', 'SMP PGRI 4 Waru — Sekolah menengah pertama di Kureksari, Sidoarjo')</title>
 <meta name="description" content="@yield('description', 'SMP PGRI 4 Waru berdiri sejak 1979 di Jl. Anggrek No. 109, Kureksari, Waru, Sidoarjo. Identitas sekolah, mata pelajaran, alur pendaftaran, dan lokasi.')">
 <link rel="preload" href="/fonts/plus-jakarta-sans-var.woff2" as="font" type="font/woff2" crossorigin>

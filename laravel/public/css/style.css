@@ -5066,8 +5066,17 @@ body.has-lightbox {
 
 /* 8. Penyempurnaan Responsif Multi-Layar (Tablet, Phablet, Ponsel Kecil 320px) */
 @media (max-width: 900px) {
+  /* Satu sumber tinggi bilah. Padding body dan tombol kembali ke atas
+     memakainya, jadi tidak ada isi halaman yang tertutup bilah. */
+  :root {
+    --qb-item: 52px;
+    --qb-pad: 6px;
+    --qb-h: calc(var(--qb-item) + var(--qb-pad) * 2 + 1px);
+    --qb-safe: env(safe-area-inset-bottom, 0px);
+  }
+
   body {
-    padding-bottom: 4.5rem;
+    padding-bottom: calc(var(--qb-h) + 1.1rem + var(--qb-safe));
   }
 
   .mobile-quickbar {
@@ -5077,25 +5086,24 @@ body.has-lightbox {
     bottom: 0;
     z-index: 70;
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(0, 1.22fr);
-    align-items: stretch;
-    gap: 0.2rem;
-    padding: 0.3rem 0.45rem calc(0.3rem + env(safe-area-inset-bottom, 0px));
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.18fr);
+    align-items: center;
+    gap: 2px;
+    padding: var(--qb-pad) 6px calc(var(--qb-pad) + var(--qb-safe));
     background: var(--surface);
     border-top: 1px solid var(--line);
-    box-shadow: 0 -12px 32px -24px rgba(24, 24, 27, 0.45);
+    box-shadow: 0 -14px 28px -26px rgba(24, 24, 27, 0.5);
   }
 
   .mobile-quickbar__item {
-    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0.22rem;
-    min-height: 50px;
-    padding: 0.4rem 0.15rem 0.3rem;
-    border-radius: 10px;
+    gap: 3px;
+    min-height: var(--qb-item);
+    padding: 6px 2px 5px;
+    border-radius: 12px;
     color: var(--ink-2);
     font-size: 0.75rem;
     font-weight: 600;
@@ -5107,66 +5115,116 @@ body.has-lightbox {
   }
 
   .mobile-quickbar__item .i {
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
+    border-radius: 8px;
   }
 
   .mobile-quickbar__item:hover {
     color: var(--ink);
+    background: var(--tint);
   }
 
-  /* Halaman aktif ditandai dua sinyal — warna dan garis aksen di atas —
-     supaya tidak bergantung pada warna saja. */
+  /* Keadaan aktif ditandai tiga sinyal — chip terisi di belakang ikon, bobot
+     label, dan warna aksen — jadi tidak bergantung pada warna saja. */
   .mobile-quickbar__item.is-active {
     color: var(--red);
     font-weight: 700;
   }
 
-  .mobile-quickbar__item.is-active::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 50%;
-    width: 26px;
-    height: 3px;
-    border-radius: 0 0 3px 3px;
-    background: var(--red);
-    transform: translateX(-50%);
+  .mobile-quickbar__item.is-active .i {
+    background: var(--red-soft-2);
+    box-shadow: 0 0 0 6px var(--red-soft-2);
+  }
+
+  .mobile-quickbar__item:active {
+    background: var(--tint);
   }
 
   .mobile-quickbar__item:focus-visible {
     outline: 2px solid var(--red);
+    outline-offset: -2px;
+  }
+
+  /* Satu-satunya permukaan terisi penuh di bilah ini: aksi utama PPDB.
+     --red untuk teks/aksen, --red-solid untuk permukaan terisi. */
+  .mobile-quickbar__item--cta {
+    align-self: stretch;
+    min-height: 0;
+    margin-block: 3px;
+    padding-block: 3px;
+    gap: 2px;
+    background: var(--red-solid);
+    color: #ffffff;
+    border-radius: 12px;
+    font-weight: 700;
+    box-shadow: 0 8px 18px -14px rgba(14, 94, 143, 0.85);
+  }
+
+  .mobile-quickbar__item--cta:hover,
+  .mobile-quickbar__item--cta:active {
+    background: var(--red-solid-hover);
+    color: #ffffff;
+  }
+
+  .mobile-quickbar__item--cta:focus-visible {
+    outline: 2px solid var(--ink);
     outline-offset: 2px;
   }
 
-  /* --red dipakai untuk teks/aksen, --red-solid untuk permukaan terisi:
-     satu token satu tugas, dan keduanya punya pasangan kontrasnya sendiri
-     di tema gelap. */
-  .mobile-quickbar__item--cta {
-    background: var(--red-solid);
-    color: #ffffff;
-    border-radius: 10px;
-    font-weight: 700;
-    box-shadow: 0 8px 18px -12px rgba(14, 94, 143, 0.8);
-  }
-
-  .mobile-quickbar__item--cta:hover {
-    color: #ffffff;
-    filter: brightness(1.1);
+  .mobile-quickbar__item--cta .i,
+  .mobile-quickbar__item--cta.is-active .i {
+    background: none;
+    box-shadow: none;
   }
 
   .mobile-quickbar__item--cta.is-active {
     color: #ffffff;
-    box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.6);
-  }
-
-  .mobile-quickbar__item--cta.is-active::before {
-    display: none;
+    box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.55);
   }
 
   .back-top {
     right: 1rem;
-    bottom: 5.15rem;
+    bottom: calc(var(--qb-h) + 1.1rem + var(--qb-safe));
+  }
+}
+
+/* Di ponsel tepi atas bilah diberi kabut tipis supaya teks yang lewat di
+   belakangnya larut ke permukaan bilah, bukan terpotong garis lurus. */
+@media (max-width: 600px) {
+  .mobile-quickbar::before {
+    content: "";
+    position: absolute;
+    inset: auto 0 100% 0;
+    height: 16px;
+    background: linear-gradient(to top, var(--surface), transparent);
+    pointer-events: none;
+  }
+}
+
+/* Di tablet bilah berhenti jadi strip penuh: ia jadi dok mengambang dengan
+   lebar terbatas, supaya empat butir tidak melar jadi kolom raksasa. */
+@media (min-width: 601px) and (max-width: 900px) {
+  body {
+    padding-bottom: calc(var(--qb-h) + 2.4rem + var(--qb-safe));
+  }
+
+  .mobile-quickbar {
+    left: 50%;
+    right: auto;
+    width: min(31rem, calc(100% - 2rem));
+    bottom: calc(1rem + var(--qb-safe));
+    transform: translateX(-50%);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: var(--qb-pad) 8px;
+    box-shadow:
+      0 24px 44px -34px rgba(24, 24, 27, 0.55),
+      0 2px 6px -2px rgba(24, 24, 27, 0.08);
+  }
+
+  .back-top {
+    bottom: calc(var(--qb-h) + 2.4rem + var(--qb-safe));
   }
 }
 
@@ -5324,14 +5382,14 @@ body.has-lightbox {
   }
 
   .mobile-quickbar__item {
-    gap: 0.18rem;
-    padding-inline: 0.05rem;
+    gap: 2px;
+    padding-inline: 0;
     font-size: 0.7rem;
   }
 
   .mobile-quickbar__item .i {
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
   }
 }
 
