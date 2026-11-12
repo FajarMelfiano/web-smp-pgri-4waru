@@ -195,12 +195,17 @@
         <span class="deco__diamond" style="left:-6px;bottom:32px"></span>
       </div>
       <div class="banner__body">
-        <p class="eyebrow">Pendaftaran</p>
-        <h2 id="ppdb">Pendaftaran berlangsung <span class="accent">di kantor sekolah</span></h2>
-        <p>Empat langkah, tanpa pendaftaran daring dan tanpa biaya yang ditagih lewat situs ini. Halaman PPDB membantu kamu menyiapkan pertanyaan sebelum datang.</p>
+        <p class="eyebrow">Pendaftaran Siswa Baru · T.A. {{ $siteSettings['tahun_ajaran'] ?? '2026/2027' }}</p>
+        <h2 id="ppdb">Daftar <span class="accent">PPDB Online</span> atau langsung di kantor sekolah</h2>
+        <p>Kini calon siswa dan orang tua dapat membuat akun PPDB Online, memilih jalur gelombang, mengunggah berkas persyaratan, dan mencetak Kartu Peserta langsung dari rumah.</p>
         <div class="banner__actions">
-          <a class="btn btn--primary" href="{{ route('ppdb') }}">Buka halaman PPDB</a>
-          <a class="btn btn--ghost" href="tel:+62318538447">Telepon sekolah</a>
+          @auth('ppdb')
+            <a class="btn btn--primary" href="{{ route('ppdb.portal.beranda') }}">Buka Portal PPDB Saya</a>
+          @else
+            <a class="btn btn--primary" href="{{ route('ppdb.daftar') }}">Daftar PPDB Online</a>
+            <a class="btn btn--ghost" href="{{ route('ppdb.masuk') }}">Masuk Portal</a>
+          @endauth
+          <a class="btn btn--ghost" href="{{ route('ppdb') }}">Panduan &amp; Syarat PPDB</a>
         </div>
       </div>
       <ul class="ticket">

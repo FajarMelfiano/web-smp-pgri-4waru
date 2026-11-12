@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\PpdbAccount;
 use App\Models\User;
 
 return [
@@ -42,6 +43,11 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        'ppdb' => [
+            'driver' => 'session',
+            'provider' => 'ppdb_accounts',
+        ],
     ],
 
     /*
@@ -65,6 +71,11 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', User::class),
+        ],
+
+        'ppdb_accounts' => [
+            'driver' => 'eloquent',
+            'model' => PpdbAccount::class,
         ],
 
         // 'users' => [

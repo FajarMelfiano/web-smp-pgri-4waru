@@ -9,8 +9,12 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    public function showLogin(): View
+    public function showLogin(): View|RedirectResponse
     {
+        if (Auth::guard('web')->check()) {
+            return redirect()->route('admin');
+        }
+
         return view('pages.auth.login');
     }
 
@@ -21,10 +25,15 @@ class AuthController extends Controller
             'password' => ['required', 'string'],
         ]);
 
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
+        if (Auth::guard('web')->attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
 
-            return redirect()->intended(route('admin'));
+            $intended = $request->session()->pull('url.intended', route('admin'));
+            if (str_contains($intended, '/ppdb')) {
+                $intended = route('admin');
+            }
+
+            return redirect()->to($intended);
         }
 
         return back()->withErrors([
@@ -34,8 +43,12 @@ class AuthController extends Controller
 
     public function logout(Request $request): RedirectResponse
     {
-        Auth::logout();
-        $request->session()->invalidate();
+        Auth::guard('web')->logout();
+
+        if (! Auth::guard('ppdb')->check()) {
+            $request->session()->invalidate();
+        }
+
         $request->session()->regenerateToken();
 
         return redirect()->route('login');

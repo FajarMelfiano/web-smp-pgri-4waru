@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\AlumniReview;
 use App\Models\Galeri;
 use App\Models\Post;
+use App\Models\PpdbJalur;
 use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -226,14 +227,18 @@ class DatabaseSeeder extends Seeder
             'alamat' => 'Jl. Anggrek No. 109, Kureksari, Kec. Waru, Kab. Sidoarjo',
             'kode_pos' => '61256',
             'koordinat' => '-7.3619, 112.7327',
-            'jam_layanan' => 'Pagi hari, enam hari dalam seminggu (Senin–Sabtu)',
+            'jam_layanan' => 'Senin sampai Sabtu, pukul 07.00 sampai 14.00 WIB',
             'hero_eyebrow' => 'Selamat datang di SMP PGRI 4 Waru',
             'hero_judul' => 'Sekolah menengah pertama untuk keluarga Kureksari sejak 1979.',
             'hero_deskripsi' => 'Sekolah swasta di bawah YPLP DASMEN PGRI Jawa Timur. Alamatnya tidak pernah pindah dari Jalan Anggrek No. 109, dan kegiatan belajar berlangsung pagi hari, enam hari dalam seminggu.',
             'visi_sekolah' => 'Menjadi sekolah menengah pertama yang dekat dengan warganya, tempat siswa Kureksari belajar dengan tertib, percaya diri, dan siap melanjutkan pendidikan.',
-            'pengumuman_ppdb' => 'Pendaftaran dilakukan langsung di kantor sekolah Jl. Anggrek No. 109, Kureksari.',
-            'status_ppdb' => 'Dibuka: Layanan Kantor Sekolah',
+            'pengumuman_ppdb' => 'Pendaftaran PPDB Online Tahun Ajaran 2026/2027 telah dibuka. Buat akun dan lengkapi berkas secara daring atau kunjungi kantor sekolah Jl. Anggrek No. 109.',
+            'status_ppdb' => 'Dibuka: Online & Kantor Sekolah',
             'tahun_ajaran' => '2026/2027',
+            'ppdb_bank_nama' => 'Bank Jatim / Loket TU Sekolah',
+            'ppdb_bank_rekening' => 'Konfirmasi nomor rekening ke TU (031) 8538447',
+            'ppdb_bank_atas_nama' => 'SMP PGRI 4 Waru',
+            'ppdb_catatan_bayar' => 'Pembayaran dapat dilakukan melalui transfer ke rekening sekolah atau tunai langsung di loket Tata Usaha Jl. Anggrek No. 109 (Senin–Sabtu, 07.00–13.00 WIB).',
             'logo_path' => 'site/logo_sekolah-655024df-93c6-49ea-8c84-3185a58193df.png',
             'hero_image_path' => 'site/gedung-smp-pgri4-waru.webp',
         ];
@@ -241,5 +246,50 @@ class DatabaseSeeder extends Seeder
         foreach ($savedSettings as $key => $value) {
             Setting::setValue($key, $value);
         }
+
+        PpdbJalur::query()->updateOrCreate(
+            ['kode' => 'inden'],
+            [
+                'nama' => 'Jalur Inden',
+                'deskripsi' => 'Gelombang pendaftaran awal bagi lulusan SD/MI di kawasan Waru dan Sidoarjo dengan verifikasi prioritas.',
+                'persyaratan' => 'Mengisi biodata online dan melampirkan KK, Akta Kelahiran, fotokopi rapor/surat keterangan kelas VI, serta pas foto 3x4.',
+                'tanggal_mulai' => '2026-10-01',
+                'tanggal_selesai' => '2027-02-28',
+                'biaya_daftar' => 0,
+                'kuota' => 60,
+                'dibuka' => true,
+                'urutan' => 1,
+            ]
+        );
+
+        PpdbJalur::query()->updateOrCreate(
+            ['kode' => 'prestasi'],
+            [
+                'nama' => 'Jalur Prestasi',
+                'deskripsi' => 'Jalur penerimaan bagi calon siswa berprestasi akademik maupun non-akademik tingkat sekolah atau kecamatan.',
+                'persyaratan' => 'Melampirkan KK, Akta Kelahiran, SKL/Rapor SD, pas foto 3x4, dan bukti sertifikat prestasi saat verifikasi di sekolah.',
+                'tanggal_mulai' => '2026-11-01',
+                'tanggal_selesai' => '2027-04-30',
+                'biaya_daftar' => 0,
+                'kuota' => 40,
+                'dibuka' => true,
+                'urutan' => 2,
+            ]
+        );
+
+        PpdbJalur::query()->updateOrCreate(
+            ['kode' => 'reguler'],
+            [
+                'nama' => 'Jalur Reguler',
+                'deskripsi' => 'Penerimaan peserta didik baru gelombang reguler Tahun Ajaran 2026/2027 SMP PGRI 4 Waru.',
+                'persyaratan' => 'Melampirkan KK, Akta Kelahiran, SKL/Ijazah SD sederajat, dan pas foto terbaru.',
+                'tanggal_mulai' => '2026-11-01',
+                'tanggal_selesai' => '2027-07-15',
+                'biaya_daftar' => 100000,
+                'kuota' => 120,
+                'dibuka' => true,
+                'urutan' => 3,
+            ]
+        );
     }
 }

@@ -4,10 +4,13 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AlumniController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BeritaController;
+use App\Http\Controllers\PpdbAuthController;
 use App\Http\Controllers\PpdbController;
+use App\Http\Controllers\PpdbPortalController;
 use App\Models\AlumniReview;
 use App\Models\Galeri;
 use App\Models\Post;
+use App\Models\PpdbJalur;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
@@ -34,13 +37,62 @@ Route::get('/', function () {
         ? AlumniReview::query()->where('status', 'terbit')->latest()->limit(3)->get()
         : collect();
 
-    return view('pages.beranda', compact('beritaTerbaru', 'galeriBeranda', 'ulasanAlumni'));
+    $jalurPpdb = Schema::hasTable('ppdb_jalur')
+        ? PpdbJalur::query()->withCount('pendaftaran')->orderBy('urutan')->orderBy('id')->get()
+        : collect();
+
+    return view('pages.beranda', compact('beritaTerbaru', 'galeriBeranda', 'ulasanAlumni', 'jalurPpdb'));
 })->name('beranda');
 
 Route::get('/profil', fn () => view('pages.profil'))->name('profil');
 Route::get('/akademik', fn () => view('pages.akademik'))->name('akademik');
-Route::get('/ppdb', fn () => view('pages.ppdb'))->name('ppdb');
+
+Route::get('/ppdb', function () {
+    $jalurList = Schema::hasTable('ppdb_jalur')
+        ? PpdbJalur::query()->withCount('pendaftaran')->orderBy('urutan')->orderBy('id')->get()
+        : collect();
+
+    return view('pages.ppdb', compact('jalurList'));
+})->name('ppdb');
+
 Route::post('/ppdb', [PpdbController::class, 'store'])->middleware('throttle:5,1')->name('ppdb.store');
+
+Route::middleware('guest:ppdb')->group(function (): void {
+    Route::get('/ppdb/daftar', [PpdbAuthController::class, 'showRegister'])->name('ppdb.daftar');
+    Route::post('/ppdb/daftar/tahap-1', [PpdbAuthController::class, 'saveRegisterStep1'])->middleware('throttle:20,1')->name('ppdb.daftar.step1');
+    Route::post('/ppdb/daftar', [PpdbAuthController::class, 'register'])->middleware('throttle:15,1')->name('ppdb.daftar.store');
+    Route::get('/ppdb/masuk', [PpdbAuthController::class, 'showLogin'])->name('ppdb.masuk');
+    Route::post('/ppdb/masuk', [PpdbAuthController::class, 'login'])->middleware('throttle:15,1')->name('ppdb.masuk.attempt');
+});
+
+Route::post('/ppdb/keluar', [PpdbAuthController::class, 'logout'])
+    ->middleware('auth:ppdb')
+    ->name('ppdb.keluar');
+
+Route::middleware('auth:ppdb,web')->prefix('ppdb/portal')->name('ppdb.portal')->group(function (): void {
+    Route::get('/pembayaran/{pembayaran}/bukti', [PpdbPortalController::class, 'downloadBuktiBayar'])->name('.pembayaran.bukti');
+    Route::get('/berkas/{berkas}/unduh', [PpdbPortalController::class, 'downloadBerkas'])->name('.berkas.download');
+});
+
+Route::middleware('auth:ppdb')->prefix('ppdb/portal')->name('ppdb.portal')->group(function (): void {
+    Route::get('/', [PpdbPortalController::class, 'beranda']);
+    Route::get('/beranda', [PpdbPortalController::class, 'beranda'])->name('.beranda');
+    Route::get('/jalur', [PpdbPortalController::class, 'jalur'])->name('.jalur');
+    Route::post('/jalur', [PpdbPortalController::class, 'storeJalur'])->name('.jalur.store');
+    Route::get('/pembayaran', [PpdbPortalController::class, 'pembayaran'])->name('.pembayaran');
+    Route::post('/pembayaran', [PpdbPortalController::class, 'storePembayaran'])->name('.pembayaran.store');
+    Route::get('/riwayat-pembayaran', [PpdbPortalController::class, 'riwayatPembayaran'])->name('.riwayat-pembayaran');
+    Route::get('/data-diri', [PpdbPortalController::class, 'dataDiri'])->name('.data-diri');
+    Route::post('/data-diri', [PpdbPortalController::class, 'updateDataDiri'])->name('.data-diri.update');
+    Route::get('/berkas', [PpdbPortalController::class, 'berkas'])->name('.berkas');
+    Route::post('/berkas', [PpdbPortalController::class, 'storeBerkas'])->name('.berkas.store');
+    Route::get('/kuesioner', [PpdbPortalController::class, 'kuesioner'])->name('.kuesioner');
+    Route::post('/kuesioner', [PpdbPortalController::class, 'storeKuesioner'])->name('.kuesioner.store');
+    Route::get('/kartu-peserta', [PpdbPortalController::class, 'kartuPeserta'])->name('.kartu-peserta');
+    Route::get('/pengumuman', [PpdbPortalController::class, 'pengumuman'])->name('.pengumuman');
+    Route::get('/bantuan', [PpdbPortalController::class, 'bantuan'])->name('.bantuan');
+});
+
 Route::get('/kontak', fn () => view('pages.kontak'))->name('kontak');
 
 Route::get('/berita', [BeritaController::class, 'index'])->name('berita.index');
@@ -55,6 +107,8 @@ Route::get('/sitemap.xml', function () {
         route('profil'),
         route('akademik'),
         route('ppdb'),
+        route('ppdb.daftar'),
+        route('ppdb.masuk'),
         route('kontak'),
         route('berita.index'),
         route('alumni.index'),
@@ -74,12 +128,30 @@ Route::get('/sitemap.xml', function () {
 })->name('sitemap');
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1')->name('login.attempt');
-Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
+Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:15,1')->name('login.attempt');
+Route::get('/admin/login', [AuthController::class, 'showLogin'])->name('admin.login');
+Route::post('/admin/login', [AuthController::class, 'login'])->middleware('throttle:15,1')->name('admin.login.attempt');
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:web')->name('logout');
 
-Route::middleware('auth')->group(function (): void {
+Route::middleware('auth:web')->group(function (): void {
     Route::get('/admin', [AdminController::class, 'dashboard'])->name('admin');
     Route::get('/admin/ppdb', [AdminController::class, 'ppdb'])->name('admin.ppdb');
+
+    Route::post('/admin/ppdb/jalur', [AdminController::class, 'storePpdbJalur'])->middleware('role:admin')->name('admin.ppdb.jalur.store');
+    Route::patch('/admin/ppdb/jalur/{jalur}', [AdminController::class, 'updatePpdbJalur'])->middleware('role:admin')->name('admin.ppdb.jalur.update');
+    Route::delete('/admin/ppdb/jalur/{jalur}', [AdminController::class, 'destroyPpdbJalur'])->middleware('role:admin')->name('admin.ppdb.jalur.destroy');
+
+    Route::get('/admin/ppdb/online/{pendaftaran}', [AdminController::class, 'showOnlinePpdb'])->name('admin.ppdb.online.show');
+    Route::patch('/admin/ppdb/online/{pendaftaran}/pembayaran', [AdminController::class, 'updateOnlinePembayaran'])->name('admin.ppdb.online.pembayaran');
+    Route::patch('/admin/ppdb/online/{pendaftaran}/berkas/{berkas}', [AdminController::class, 'updateOnlineBerkas'])->name('admin.ppdb.online.berkas');
+    Route::patch('/admin/ppdb/online/{pendaftaran}/status', [AdminController::class, 'updateOnlineStatus'])->name('admin.ppdb.online.status');
+    Route::delete('/admin/ppdb/online/{pendaftaran}', [AdminController::class, 'destroyOnlinePpdb'])->middleware('role:admin')->name('admin.ppdb.online.destroy');
+    Route::patch('/admin/ppdb/pembayaran/{pembayaran}/verifikasi', [AdminController::class, 'verifikasiPembayaranPpdb'])->name('admin.ppdb.pembayaran.verifikasi');
+    Route::patch('/admin/ppdb/berkas/{berkas}/verifikasi', [AdminController::class, 'verifikasiBerkasPpdb'])->name('admin.ppdb.berkas.verifikasi');
+    Route::get('/admin/ppdb/online/{pendaftaran}/berkas/{berkas}/unduh', [AdminController::class, 'downloadOnlineBerkas'])->name('admin.ppdb.online.berkas.unduh');
+    Route::get('/admin/ppdb/online/{pendaftaran}/pembayaran/{pembayaran}/bukti', [AdminController::class, 'downloadOnlineBuktiBayar'])->name('admin.ppdb.online.pembayaran.bukti');
+    Route::get('/admin/ekspor/ppdb-online.csv', [AdminController::class, 'exportOnlineCsv'])->name('admin.ekspor.ppdb-online');
+
     Route::patch('/admin/pendaftar/{pendaftar}/status', [AdminController::class, 'updateStatusPendaftar'])->name('admin.pendaftar.status');
     Route::delete('/admin/pendaftar/{pendaftar}', [AdminController::class, 'destroyPendaftar'])->middleware('role:admin')->name('admin.pendaftar.destroy');
     Route::get('/admin/ekspor/pendaftar.csv', [AdminController::class, 'exportCsv'])->name('admin.ekspor.pendaftar');

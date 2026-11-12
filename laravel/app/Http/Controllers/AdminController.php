@@ -3,16 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePostRequest;
+use App\Http\Requests\StorePpdbJalurRequest;
 use App\Models\AlumniReview;
 use App\Models\Galeri;
 use App\Models\Pendaftar;
 use App\Models\Post;
+use App\Models\PpdbBerkas;
+use App\Models\PpdbJalur;
+use App\Models\PpdbPembayaran;
+use App\Models\PpdbPendaftaran;
 use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -30,6 +36,10 @@ class AdminController extends Controller
             'diterima' => Pendaftar::query()->where('status', 'diterima')->count(),
             'ditolak' => Pendaftar::query()->where('status', 'ditolak')->count(),
             'menunggu' => Pendaftar::query()->whereIn('status', ['baru', 'dihubungi'])->count(),
+            'online_total' => PpdbPendaftaran::query()->count(),
+            'online_menunggu_bayar' => PpdbPembayaran::query()->whereIn('status', ['menunggu', 'menunggu_verifikasi'])->count(),
+            'online_diterima' => PpdbPendaftaran::query()->where('status_seleksi', 'diterima')->count(),
+            'jalur_dibuka' => PpdbJalur::query()->where('dibuka', true)->count(),
             'berita_total' => Post::query()->count(),
             'berita_terbit' => Post::query()->where('status', 'terbit')->count(),
             'berita_draf' => Post::query()->where('status', 'draf')->count(),
@@ -61,14 +71,18 @@ class AdminController extends Controller
             'alamat' => 'Jl. Anggrek No. 109, Kureksari, Kec. Waru, Kab. Sidoarjo',
             'kode_pos' => '61256',
             'koordinat' => '-7.3619, 112.7327',
-            'jam_layanan' => 'Pagi hari, enam hari dalam seminggu (Senin–Sabtu)',
+            'jam_layanan' => 'Senin sampai Sabtu, pukul 07.00 sampai 14.00 WIB',
             'hero_eyebrow' => 'Selamat datang di SMP PGRI 4 Waru',
             'hero_judul' => 'Sekolah menengah pertama untuk keluarga Kureksari sejak 1979.',
             'hero_deskripsi' => 'Sekolah swasta di bawah YPLP DASMEN PGRI Jawa Timur. Alamatnya tidak pernah pindah dari Jalan Anggrek No. 109, dan kegiatan belajar berlangsung pagi hari, enam hari dalam seminggu.',
             'visi_sekolah' => 'Menjadi sekolah menengah pertama yang dekat dengan warganya, tempat siswa Kureksari belajar dengan tertib, percaya diri, dan siap melanjutkan pendidikan.',
-            'pengumuman_ppdb' => 'Pendaftaran dilakukan langsung di kantor sekolah Jl. Anggrek No. 109, Kureksari.',
-            'status_ppdb' => 'Dibuka — Layanan Kantor Sekolah',
+            'pengumuman_ppdb' => 'Pendaftaran PPDB Online Tahun Ajaran 2026/2027 telah dibuka. Buat akun dan lengkapi berkas secara daring atau kunjungi kantor sekolah Jl. Anggrek No. 109.',
+            'status_ppdb' => 'Dibuka: Online & Kantor Sekolah',
             'tahun_ajaran' => '2026/2027',
+            'ppdb_bank_nama' => 'Bank Jatim / Loket TU Sekolah',
+            'ppdb_bank_rekening' => 'Konfirmasi nomor rekening ke TU (031) 8538447',
+            'ppdb_bank_atas_nama' => 'SMP PGRI 4 Waru',
+            'ppdb_catatan_bayar' => 'Pembayaran dapat dilakukan melalui transfer ke rekening sekolah atau tunai langsung di loket Tata Usaha Jl. Anggrek No. 109 (Senin sampai Sabtu, pukul 07.00 sampai 13.00 WIB).',
             'logo_path' => '',
             'hero_image_path' => '',
             'brosur_ppdb_path' => '',
@@ -79,13 +93,18 @@ class AdminController extends Controller
     {
         $stats = $this->sharedStats();
         $pendaftarTerbaru = Pendaftar::query()->latest()->limit(5)->get();
+        $onlineTerbaru = PpdbPendaftaran::query()
+            ->with(['account', 'jalur', 'latestPembayaran'])
+            ->latest()
+            ->limit(5)
+            ->get();
         $beritaTerbaru = Post::query()->latest()->limit(4)->get();
         $settings = array_merge(
             $this->defaultSettings(),
             Setting::query()->pluck('value', 'key')->all()
         );
 
-        return view('pages.admin', compact('stats', 'pendaftarTerbaru', 'beritaTerbaru', 'settings'));
+        return view('pages.admin', compact('stats', 'pendaftarTerbaru', 'onlineTerbaru', 'beritaTerbaru', 'settings'));
     }
 
     public function ppdb(Request $request): View
@@ -107,9 +126,300 @@ class AdminController extends Controller
         }
 
         $pendaftar = $query->get();
+
+        $onlineQuery = PpdbPendaftaran::query()
+            ->with(['account', 'jalur', 'pembayaran', 'latestPembayaran', 'berkas'])
+            ->latest();
+
+        $searchOnline = $request->filled('online_q')
+            ? (string) $request->string('online_q')
+            : ($request->filled('q') ? (string) $request->string('q') : '');
+
+        if ($searchOnline !== '') {
+            $onlineQuery->where(function ($sub) use ($searchOnline): void {
+                $sub->where('no_pendaftaran', 'like', "%{$searchOnline}%")
+                    ->orWhere('asal_sd', 'like', "%{$searchOnline}%")
+                    ->orWhereHas('account', function ($acc) use ($searchOnline): void {
+                        $acc->where('nama_lengkap', 'like', "%{$searchOnline}%")
+                            ->orWhere('email', 'like', "%{$searchOnline}%")
+                            ->orWhere('nik', 'like', "%{$searchOnline}%");
+                    });
+            });
+        }
+
+        if ($request->filled('jalur_id')) {
+            $onlineQuery->where('ppdb_jalur_id', (int) $request->input('jalur_id'));
+        }
+
+        $statusOnline = $request->filled('online_status')
+            ? (string) $request->string('online_status')
+            : ($request->filled('status_seleksi') ? (string) $request->string('status_seleksi') : '');
+
+        if ($statusOnline !== '') {
+            $onlineQuery->where('status_seleksi', $statusOnline);
+        }
+
+        $onlinePendaftaran = $onlineQuery->get();
+        $jalurList = PpdbJalur::query()
+            ->withCount('pendaftaran')
+            ->orderBy('urutan')
+            ->orderBy('id')
+            ->get();
+        $editJalur = $request->filled('edit_jalur')
+            ? PpdbJalur::query()->find((int) $request->input('edit_jalur'))
+            : null;
         $stats = $this->sharedStats();
 
-        return view('pages.admin.ppdb', compact('pendaftar', 'stats'));
+        return view('pages.admin.ppdb', compact(
+            'pendaftar',
+            'onlinePendaftaran',
+            'jalurList',
+            'editJalur',
+            'stats'
+        ));
+    }
+
+    public function showOnlinePpdb(PpdbPendaftaran $pendaftaran): View
+    {
+        $pendaftaran->load(['account', 'jalur', 'pembayaran.verifier', 'latestPembayaran', 'berkas.verifier']);
+        $stats = $this->sharedStats();
+        $requiredBerkas = PpdbPendaftaran::REQUIRED_BERKAS;
+        $berkasByJenis = $pendaftaran->berkas->keyBy('jenis');
+
+        return view('pages.admin.ppdb-online-show', compact(
+            'pendaftaran',
+            'stats',
+            'requiredBerkas',
+            'berkasByJenis'
+        ));
+    }
+
+    public function storePpdbJalur(StorePpdbJalurRequest $request): RedirectResponse
+    {
+        $validated = $request->validated();
+
+        PpdbJalur::query()->create([
+            'nama' => $validated['nama'],
+            'kode' => $validated['kode'],
+            'deskripsi' => $validated['deskripsi'] ?? null,
+            'persyaratan' => $validated['persyaratan'] ?? null,
+            'tanggal_mulai' => $validated['tanggal_mulai'],
+            'tanggal_selesai' => $validated['tanggal_selesai'],
+            'biaya_daftar' => $validated['biaya_daftar'],
+            'kuota' => $validated['kuota'] ?? null,
+            'dibuka' => $request->boolean('dibuka', true),
+            'urutan' => $validated['urutan'] ?? 1,
+        ]);
+
+        return redirect()->route('admin.ppdb', ['tab' => 'jalur'])->with('status', 'Jalur PPDB baru berhasil ditambahkan.');
+    }
+
+    public function updatePpdbJalur(StorePpdbJalurRequest $request, PpdbJalur $jalur): RedirectResponse
+    {
+        $validated = $request->validated();
+
+        $jalur->update([
+            'nama' => $validated['nama'],
+            'kode' => $validated['kode'],
+            'deskripsi' => $validated['deskripsi'] ?? null,
+            'persyaratan' => $validated['persyaratan'] ?? null,
+            'tanggal_mulai' => $validated['tanggal_mulai'],
+            'tanggal_selesai' => $validated['tanggal_selesai'],
+            'biaya_daftar' => $validated['biaya_daftar'],
+            'kuota' => $validated['kuota'] ?? null,
+            'dibuka' => $request->boolean('dibuka'),
+            'urutan' => $validated['urutan'] ?? $jalur->urutan,
+        ]);
+
+        return redirect()->route('admin.ppdb', ['tab' => 'jalur'])->with('status', 'Data jalur '.$jalur->nama.' berhasil diperbarui.');
+    }
+
+    public function destroyPpdbJalur(PpdbJalur $jalur): RedirectResponse
+    {
+        if ($jalur->pendaftaran()->exists()) {
+            return redirect()
+                ->route('admin.ppdb', ['tab' => 'jalur'])
+                ->with('status', 'Jalur tidak dapat dihapus karena sudah dipilih pendaftar. Ubah status menjadi ditutup.');
+        }
+
+        $jalur->delete();
+
+        return redirect()->route('admin.ppdb', ['tab' => 'jalur'])->with('status', 'Jalur PPDB berhasil dihapus.');
+    }
+
+    public function updateOnlinePembayaran(Request $request, PpdbPendaftaran $pendaftaran): RedirectResponse
+    {
+        $payment = $pendaftaran->latestPembayaran()->first();
+        if ($payment === null) {
+            return redirect()
+                ->route('admin.ppdb.online.show', $pendaftaran)
+                ->with('status', 'Belum ada tagihan pembayaran untuk pendaftar ini.');
+        }
+
+        return $this->verifikasiPembayaranPpdb($request, $payment);
+    }
+
+    public function verifikasiPembayaranPpdb(Request $request, PpdbPembayaran $pembayaran): RedirectResponse
+    {
+        $validated = $request->validate([
+            'status' => ['required', 'in:lunas,ditolak,menunggu,menunggu_verifikasi'],
+            'catatan_admin' => ['nullable', 'string', 'max:500'],
+        ]);
+
+        $pembayaran->update([
+            'status' => $validated['status'],
+            'catatan_admin' => $validated['catatan_admin'] ?? null,
+            'verified_by' => $request->user()?->id,
+            'verified_at' => in_array($validated['status'], ['menunggu', 'menunggu_verifikasi'], true) ? null : now(),
+        ]);
+
+        return redirect()
+            ->route('admin.ppdb.online.show', $pembayaran->ppdb_pendaftaran_id)
+            ->with('status', 'Status pembayaran diperbarui menjadi '.$pembayaran->statusLabel().'.');
+    }
+
+    public function updateOnlineBerkas(Request $request, PpdbPendaftaran $pendaftaran, PpdbBerkas $berkas): RedirectResponse
+    {
+        abort_unless($berkas->ppdb_pendaftaran_id === $pendaftaran->id, 404);
+
+        return $this->verifikasiBerkasPpdb($request, $berkas);
+    }
+
+    public function verifikasiBerkasPpdb(Request $request, PpdbBerkas $berkas): RedirectResponse
+    {
+        $validated = $request->validate([
+            'status' => ['required', 'in:valid,ditolak,revisi,menunggu'],
+            'catatan_admin' => ['nullable', 'string', 'max:500'],
+        ]);
+
+        $berkas->update([
+            'status' => $validated['status'],
+            'catatan_admin' => $validated['catatan_admin'] ?? null,
+            'verified_by' => $request->user()?->id,
+            'verified_at' => $validated['status'] === 'menunggu' ? null : now(),
+        ]);
+
+        $pendaftaran = $berkas->pendaftaran;
+        if ($pendaftaran !== null) {
+            $pendaftaran->load('berkas');
+            $pendaftaran->update([
+                'berkas_lengkap_at' => $pendaftaran->hasUploadedAllRequiredBerkas() ? ($pendaftaran->berkas_lengkap_at ?? now()) : null,
+            ]);
+        }
+
+        return redirect()
+            ->route('admin.ppdb.online.show', $berkas->ppdb_pendaftaran_id)
+            ->with('status', 'Status berkas '.$berkas->label().' diperbarui.');
+    }
+
+    public function updateOnlineStatus(Request $request, PpdbPendaftaran $pendaftaran): RedirectResponse
+    {
+        if (! $request->filled('catatan_admin') && $request->filled('catatan_panitia')) {
+            $request->merge(['catatan_admin' => $request->input('catatan_panitia')]);
+        }
+
+        $validated = $request->validate([
+            'status_seleksi' => ['required', 'in:proses,terverifikasi,diterima,ditolak'],
+            'catatan_admin' => ['nullable', 'string', 'max:1000'],
+        ]);
+
+        $pendaftaran->update([
+            'status_seleksi' => $validated['status_seleksi'],
+            'catatan_admin' => $validated['catatan_admin'] ?? null,
+            'pengumuman_at' => in_array($validated['status_seleksi'], ['diterima', 'ditolak'], true)
+                ? ($pendaftaran->pengumuman_at ?? now())
+                : null,
+        ]);
+
+        return redirect()
+            ->route('admin.ppdb.online.show', $pendaftaran)
+            ->with('status', 'Status seleksi pendaftar diperbarui menjadi '.$pendaftaran->statusSeleksiLabel().'.');
+    }
+
+    public function destroyOnlinePpdb(PpdbPendaftaran $pendaftaran): RedirectResponse
+    {
+        foreach ($pendaftaran->riwayatPembayaran as $pay) {
+            if ($pay->bukti_path !== null) {
+                Storage::disk('local')->delete($pay->bukti_path);
+            }
+        }
+
+        foreach ($pendaftaran->berkas as $berkas) {
+            Storage::disk('local')->delete($berkas->file_path);
+        }
+
+        $account = $pendaftaran->account;
+        $pendaftaran->delete();
+        $account?->delete();
+
+        return redirect()
+            ->route('admin.ppdb', ['tab' => 'online'])
+            ->with('status', 'Data pendaftar PPDB online berhasil dihapus.');
+    }
+
+    public function downloadOnlineBerkas(PpdbPendaftaran $pendaftaran, PpdbBerkas $berkas): StreamedResponse
+    {
+        abort_unless($berkas->ppdb_pendaftaran_id === $pendaftaran->id, 404);
+        abort_unless(Storage::disk('local')->exists($berkas->file_path), 404);
+
+        return Storage::disk('local')->response($berkas->file_path, $berkas->original_name);
+    }
+
+    public function downloadOnlineBuktiBayar(PpdbPendaftaran $pendaftaran, PpdbPembayaran $pembayaran): StreamedResponse
+    {
+        abort_unless($pembayaran->ppdb_pendaftaran_id === $pendaftaran->id, 404);
+        abort_unless($pembayaran->bukti_path !== null && Storage::disk('local')->exists($pembayaran->bukti_path), 404);
+
+        return Storage::disk('local')->response($pembayaran->bukti_path);
+    }
+
+    public function exportOnlineCsv(): StreamedResponse
+    {
+        return response()->streamDownload(function (): void {
+            $handle = fopen('php://output', 'w');
+            if ($handle === false) {
+                return;
+            }
+
+            fputcsv($handle, [
+                'No Pendaftaran',
+                'Nama Lengkap',
+                'Email',
+                'NIK',
+                'Tanggal Lahir',
+                'WhatsApp',
+                'Jalur',
+                'Status Bayar',
+                'Asal SD',
+                'Status Seleksi',
+                'Waktu Daftar',
+            ]);
+
+            $rows = PpdbPendaftaran::query()
+                ->with(['account', 'jalur', 'latestPembayaran'])
+                ->orderBy('id')
+                ->cursor();
+
+            foreach ($rows as $row) {
+                fputcsv($handle, [
+                    $row->no_pendaftaran ?? '-',
+                    $row->account?->nama_lengkap ?? '-',
+                    $row->account?->email ?? '-',
+                    $row->account?->nik ?? '-',
+                    $row->account?->tanggal_lahir?->toDateString() ?? '-',
+                    $row->account?->whatsapp ?? '-',
+                    $row->jalur?->nama ?? '-',
+                    $row->latestPembayaran?->statusLabel() ?? 'Belum Memilih Jalur',
+                    $row->asal_sd ?? '-',
+                    $row->statusSeleksiLabel(),
+                    $row->created_at?->toDateTimeString(),
+                ]);
+            }
+
+            fclose($handle);
+        }, 'ppdb-online-smp-pgri-4-waru.csv', [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+        ]);
     }
 
     public function berita(Request $request): View
@@ -470,6 +780,10 @@ class AdminController extends Controller
             'pengumuman_ppdb' => ['nullable', 'string', 'max:500'],
             'status_ppdb' => ['nullable', 'string', 'max:80'],
             'tahun_ajaran' => ['nullable', 'string', 'max:30'],
+            'ppdb_bank_nama' => ['nullable', 'string', 'max:120'],
+            'ppdb_bank_rekening' => ['nullable', 'string', 'max:120'],
+            'ppdb_bank_atas_nama' => ['nullable', 'string', 'max:120'],
+            'ppdb_catatan_bayar' => ['nullable', 'string', 'max:500'],
             'logo_sekolah' => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp,svg', 'max:2048'],
             'hero_image' => ['nullable', 'file', 'mimes:jpg,jpeg,png,webp', 'max:4096'],
             'brosur_ppdb' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png,webp', 'max:5120'],

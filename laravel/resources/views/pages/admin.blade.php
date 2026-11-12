@@ -35,17 +35,17 @@
       <article class="adm-kpi">
         <div>
           <span class="adm-kpi__label">Total Pendaftar</span>
-          <b class="adm-kpi__val">{{ $stats['total'] ?? 0 }}</b>
-          <span class="adm-kpi__sub">Tahun ajaran {{ $settings['tahun_ajaran'] ?? '2026/2027' }}</span>
+          <b class="adm-kpi__val">{{ ($stats['online_total'] ?? 0) + ($stats['total'] ?? 0) }}</b>
+          <span class="adm-kpi__sub">{{ $stats['online_total'] ?? 0 }} portal online · {{ $stats['total'] ?? 0 }} pesan cepat</span>
         </div>
         <span class="adm-kpi__icon" aria-hidden="true"><svg class="i"><use href="#i-users"/></svg></span>
       </article>
 
       <article class="adm-kpi adm-kpi--red">
         <div>
-          <span class="adm-kpi__label">Berkas Diterima</span>
-          <b class="adm-kpi__val">{{ $stats['diterima'] ?? 0 }}</b>
-          <span class="adm-kpi__sub">Telah diverifikasi petugas</span>
+          <span class="adm-kpi__label">Diterima &amp; Terverifikasi</span>
+          <b class="adm-kpi__val">{{ ($stats['ppdb_online_diterima'] ?? 0) + ($stats['ppdb_online_terverifikasi'] ?? 0) + ($stats['diterima'] ?? 0) }}</b>
+          <span class="adm-kpi__sub">Telah diverifikasi panitia</span>
         </div>
         <span class="adm-kpi__icon" aria-hidden="true"><svg class="i"><use href="#i-seal-check"/></svg></span>
       </article>

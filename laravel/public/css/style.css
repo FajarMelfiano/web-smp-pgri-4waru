@@ -147,6 +147,11 @@ svg {
   display: block;
 }
 
+svg[hidden],
+[hidden] {
+  display: none !important;
+}
+
 img {
   max-width: 100%;
   height: auto;
@@ -370,8 +375,10 @@ section[id] {
 
 .note {
   margin-top: 1.25rem;
-  padding-left: 0.9rem;
-  border-left: 3px solid var(--line);
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: var(--tint);
   color: var(--ink-3);
   font-size: 0.85rem;
   line-height: 1.7;
@@ -462,7 +469,7 @@ section[id] {
 }
 
 .btn--sm {
-  min-height: 42px;
+  min-height: 44px;
   padding: 0.6rem 1.1rem;
   font-size: var(--f-xs);
 }
@@ -1332,13 +1339,15 @@ section[id] {
   font-weight: 700;
 }
 
-.chip[aria-pressed="true"] {
+.chip[aria-pressed="true"],
+.chip.is-active {
   border-color: var(--red-solid);
   background: var(--red-solid);
   color: #fff;
 }
 
-.chip[aria-pressed="true"] .count {
+.chip[aria-pressed="true"] .count,
+.chip.is-active .count {
   background: rgba(255, 255, 255, 0.2);
   color: #fff;
 }
@@ -2020,7 +2029,7 @@ section[id] {
   margin-bottom: 1rem;
 }
 
-.field label {
+.field > label {
   display: block;
   margin-bottom: 0.35rem;
   color: var(--ink-2);
@@ -2028,7 +2037,7 @@ section[id] {
   font-weight: 700;
 }
 
-.field input,
+.field input:not([type="checkbox"]):not([type="radio"]),
 .field textarea,
 .field select,
 .adm-select {
@@ -3072,7 +3081,7 @@ section[id] {
 }
 
 .adm-table th {
-  padding: 0.75rem 1rem;
+  padding: 0.75rem 0.75rem;
   background: var(--tint);
   border-bottom: 1px solid var(--line);
   color: var(--ink-3);
@@ -3084,7 +3093,7 @@ section[id] {
 }
 
 .adm-table td {
-  padding: 0.85rem 1rem;
+  padding: 0.85rem 0.75rem;
   border-bottom: 1px solid var(--line);
   color: var(--ink-2);
   vertical-align: middle;
@@ -3961,8 +3970,8 @@ section[id] {
 .prose--article blockquote {
   margin: 1.4rem 0;
   padding: 1rem 1.35rem;
-  border-left: 4px solid var(--red-solid);
-  border-radius: 0 var(--r-md) var(--r-md) 0;
+  border: 1px solid var(--red-soft-2);
+  border-radius: var(--r-md);
   background: var(--red-soft);
   color: var(--ink);
   font-style: italic;
@@ -4360,9 +4369,9 @@ section[id] {
 .blogger-visual-editor blockquote {
   margin: 1.1rem 0;
   padding: 0.85rem 1.2rem;
-  border-left: 4px solid var(--red-solid);
+  border: 1px solid var(--red-soft-2);
   background: var(--red-soft);
-  border-radius: 0 10px 10px 0;
+  border-radius: 10px;
   font-style: italic;
   color: var(--ink);
 }
@@ -5271,5 +5280,2029 @@ body.has-lightbox {
 
   .mobile-quickbar__item {
     font-size: 0.62rem;
+  }
+}
+
+/* ==========================================================================
+   PORTAL PPDB ONLINE (Auth 2-Step, Dashboard Siswa, Jalur, Modal & Kartu)
+   ========================================================================== */
+
+.ppdb-auth-section {
+  padding: clamp(2rem, 4vw, 3.5rem) 0 clamp(3rem, 6vw, 4.5rem);
+}
+
+.ppdb-auth-grid {
+  display: grid;
+  grid-template-columns: minmax(320px, 0.95fr) minmax(340px, 1.05fr);
+  gap: clamp(1.25rem, 2.5vw, 2rem);
+  align-items: stretch;
+}
+
+.ppdb-auth-poster {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: #0c263b;
+  color: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 540px;
+}
+
+.ppdb-auth-poster__media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.ppdb-auth-poster__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(1.05) contrast(1.02);
+}
+
+.ppdb-auth-poster__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(165deg, rgba(10, 32, 50, 0.88) 0%, rgba(18, 110, 166, 0.84) 55%, rgba(8, 25, 40, 0.95) 100%);
+}
+
+.ppdb-auth-poster__content {
+  position: relative;
+  z-index: 1;
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.75rem;
+  height: 100%;
+}
+
+.ppdb-auth-poster__top {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.ppdb-auth-poster__top img {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.94);
+  padding: 4px;
+  object-fit: contain;
+}
+
+.ppdb-auth-poster__top strong {
+  display: block;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.ppdb-auth-poster__top span {
+  display: block;
+  font-size: 0.78rem;
+  color: rgba(241, 245, 249, 0.82);
+}
+
+.ppdb-auth-poster__eyebrow {
+  display: block;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #bae6fd;
+  margin-bottom: 0.55rem;
+}
+
+.ppdb-auth-poster__body h2 {
+  font-size: clamp(1.45rem, 2.4vw, 1.9rem);
+  line-height: 1.22;
+  letter-spacing: -0.025em;
+  color: #ffffff;
+  margin: 0 0 0.75rem;
+}
+
+.ppdb-auth-poster__body p {
+  font-size: 0.93rem;
+  line-height: 1.65;
+  color: rgba(241, 245, 249, 0.88);
+  margin: 0 0 1.25rem;
+}
+
+.ppdb-auth-poster__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.ppdb-auth-poster__list li {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #f8fafc;
+}
+
+.ppdb-auth-poster__list .i {
+  width: 18px;
+  height: 18px;
+  color: #7dd3fc;
+  flex-shrink: 0;
+}
+
+.ppdb-auth-poster__foot {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+  font-size: 0.78rem;
+  color: rgba(241, 245, 249, 0.78);
+}
+
+.ppdb-auth-card {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--surface);
+  padding: clamp(1.35rem, 3vw, 2.25rem);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.ppdb-auth-card__head h1 {
+  font-size: clamp(1.45rem, 2.3vw, 1.85rem);
+  letter-spacing: -0.025em;
+  margin: 0.35rem 0 0.45rem;
+}
+
+.ppdb-auth-card__head > p:last-child {
+  color: var(--ink-2);
+  font-size: 0.92rem;
+  margin: 0 0 1.25rem;
+}
+
+.ppdb-auth-steps {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.35rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.ppdb-auth-steps__item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--tint);
+  color: var(--ink-3);
+  transition: border-color 0.2s, background-color 0.2s, color 0.2s;
+}
+
+.ppdb-auth-steps__num {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.82rem;
+  font-weight: 800;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  color: var(--ink-2);
+  flex-shrink: 0;
+}
+
+.ppdb-auth-steps__item strong {
+  display: block;
+  font-size: 0.84rem;
+  color: var(--ink);
+}
+
+.ppdb-auth-steps__item span:not(.ppdb-auth-steps__num) {
+  display: block;
+  font-size: 0.74rem;
+}
+
+.ppdb-auth-steps__item.is-active {
+  border-color: var(--red-soft-2);
+  background: var(--red-soft);
+}
+
+.ppdb-auth-steps__item.is-active .ppdb-auth-steps__num {
+  background: var(--red-solid);
+  border-color: var(--red-solid);
+  color: #ffffff;
+}
+
+.ppdb-auth-steps__item.is-done {
+  border-color: var(--ink);
+  background: var(--surface);
+}
+
+.ppdb-auth-steps__item.is-done .ppdb-auth-steps__num {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--surface);
+}
+
+.ppdb-input-pw {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.ppdb-input-pw input {
+  width: 100%;
+  padding-right: 2.75rem;
+}
+
+.ppdb-pw-toggle {
+  position: absolute;
+  right: 0.25rem;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink-3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.ppdb-pw-toggle:hover {
+  color: var(--ink);
+  background: var(--tint);
+}
+
+.ppdb-pw-rules {
+  list-style: none;
+  padding: 0.65rem 0.85rem;
+  margin: 0.55rem 0 0;
+  border-radius: 10px;
+  background: var(--tint);
+  border: 1px solid var(--line);
+  display: grid;
+  gap: 0.38rem;
+}
+
+.ppdb-pw-rules li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--ink-3);
+}
+
+.ppdb-pw-rules__dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  color: transparent;
+  flex-shrink: 0;
+}
+
+.ppdb-pw-rules__dot .i {
+  width: 12px;
+  height: 12px;
+}
+
+.ppdb-pw-rules li.is-valid {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.ppdb-pw-rules li.is-valid .ppdb-pw-rules__dot {
+  background: var(--red-solid);
+  border-color: var(--red-solid);
+  color: #ffffff;
+}
+
+.ppdb-input-prefix {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.ppdb-input-prefix:focus-within {
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px var(--red-soft);
+}
+
+.ppdb-input-prefix__tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 0.85rem;
+  background: var(--tint);
+  border-right: 1px solid var(--line);
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--ink-2);
+}
+
+.ppdb-input-prefix input {
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  flex: 1 1 auto;
+}
+
+.field-error {
+  display: block;
+  color: var(--red);
+  font-size: 0.79rem;
+  font-weight: 700;
+  margin-top: 0.3rem;
+}
+
+.field-hint {
+  display: block;
+  color: var(--ink-3);
+  font-size: 0.78rem;
+  margin-top: 0.28rem;
+}
+
+.req {
+  color: var(--red);
+}
+
+.ppdb-btn-block {
+  width: 100%;
+  justify-content: center;
+}
+
+.ppdb-auth-actions {
+  margin-top: 1.25rem;
+}
+
+.ppdb-auth-actions--split {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.ppdb-auth-actions--split .btn--primary {
+  flex: 1 1 auto;
+  justify-content: center;
+}
+
+.ppdb-remember {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  font-size: 0.86rem;
+  color: var(--ink-2);
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+
+.ppdb-remember input[type="checkbox"] {
+  width: 17px;
+  height: 17px;
+  margin-top: 0.15rem;
+  accent-color: var(--red-solid);
+  flex-shrink: 0;
+}
+
+.ppdb-auth-card__foot {
+  margin-top: 1.5rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.87rem;
+  color: var(--ink-2);
+  text-align: center;
+}
+
+.ppdb-auth-card__foot a {
+  color: var(--red);
+  font-weight: 700;
+}
+
+.ppdb-auth-help {
+  margin-top: 0.35rem;
+  font-size: 0.8rem;
+  color: var(--ink-3);
+}
+
+.form-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--tint);
+  color: var(--ink);
+  font-size: 0.86rem;
+  line-height: 1.55;
+  margin-bottom: 1.1rem;
+}
+
+.form-alert > .i {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  margin-top: 0.12rem;
+  color: var(--red);
+}
+
+.form-alert__body {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.form-alert ul {
+  margin: 0.35rem 0 0 1.15rem;
+  padding: 0;
+}
+
+.form-alert--error {
+  background: var(--surface);
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+.form-alert--error > .i {
+  color: var(--ink);
+}
+
+.form-alert--ok {
+  background: var(--red-soft);
+  border-color: var(--red-soft-2);
+  color: var(--ink);
+}
+
+/* ---------- Portal Siswa Navigation & Layout ---------- */
+
+.ppdb-nav-acc__btn {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.ppdb-nav-acc__chev {
+  margin-left: auto;
+  width: 15px;
+  height: 15px;
+  transition: transform 0.2s;
+}
+
+.ppdb-nav-acc.is-open .ppdb-nav-acc__chev {
+  transform: rotate(180deg);
+}
+
+.ppdb-subnav {
+  list-style: none;
+  margin: 0.25rem 0 0.35rem 1.35rem;
+  padding: 0.2rem 0 0.2rem 0.65rem;
+  border-left: 1px solid var(--line);
+  display: grid;
+  gap: 0.15rem;
+}
+
+.ppdb-subnav__link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0.5rem 0.65rem;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ink-2);
+  text-decoration: none;
+}
+
+.ppdb-subnav__link:hover {
+  background: var(--tint);
+  color: var(--ink);
+}
+
+.ppdb-subnav__link.is-active {
+  background: var(--red-soft);
+  color: var(--red);
+  font-weight: 700;
+}
+
+.ppdb-subnav__link.is-locked {
+  opacity: 0.62;
+}
+
+.ppdb-subnav__badge {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  color: var(--ink-3);
+}
+
+.ppdb-subnav__badge.is-done {
+  color: var(--red);
+}
+
+.ppdb-nav-btn {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+}
+
+.ppdb-topbar-chips {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.ppdb-topbar-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.32rem 0.75rem;
+  border-radius: 999px;
+  background: var(--tint);
+  border: 1px solid var(--line);
+  font-size: 0.79rem;
+}
+
+.ppdb-topbar-chip span {
+  color: var(--ink-3);
+}
+
+.ppdb-topbar-chip strong {
+  color: var(--ink);
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.ppdb-main {
+  max-width: 1220px;
+}
+
+.ppdb-portal-stack {
+  display: grid;
+  gap: 1.35rem;
+}
+
+.ppdb-portal-stack .adm-panel {
+  margin-bottom: 0;
+}
+
+.ppdb-portal-stack .adm-panel > *:not(.adm-panel__head):not(.adm-panel__body):not(.adm-table-wrap) {
+  margin: 1.25rem 1.4rem !important;
+}
+
+.ppdb-empty-state {
+  padding: 2.25rem 1.5rem;
+  border-radius: 14px;
+  border: 1px dashed var(--line);
+  background: var(--tint);
+  text-align: center;
+  max-width: 640px;
+  margin-inline: auto;
+}
+
+.ppdb-empty-state__icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: var(--red-soft);
+  border: 1px solid var(--red-soft-2);
+  color: var(--red);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.85rem;
+}
+
+.ppdb-empty-state__icon .i {
+  width: 24px;
+  height: 24px;
+}
+
+.ppdb-empty-state h2 {
+  font-size: 1.12rem;
+  font-weight: 800;
+  margin: 0 0 0.4rem;
+  color: var(--ink);
+}
+
+.ppdb-empty-state p {
+  margin: 0 auto 1.25rem;
+  max-width: 52ch;
+  color: var(--ink-2);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.ppdb-empty-state__actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.ppdb-portal-stack .adm-panel__title {
+  margin: 0.15rem 0 0.25rem;
+  font-size: clamp(1.22rem, 1.9vw, 1.48rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+.ppdb-portal-stack h2.adm-panel__title {
+  font-size: clamp(1.08rem, 1.5vw, 1.24rem);
+}
+
+.ppdb-portal-stack .adm-panel__sub {
+  margin: 0;
+  color: var(--ink-2);
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.ppdb-portal-stack .adm-empty {
+  margin: 1.25rem 1.4rem !important;
+  padding: 2rem 1.5rem;
+  border-radius: 14px;
+  border: 1px dashed var(--line);
+  background: var(--tint);
+  text-align: center;
+  color: var(--ink-2);
+  font-size: 0.92rem;
+}
+
+.ppdb-portal-stack .adm-empty p {
+  margin: 0;
+}
+
+.ppdb-step1-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  padding: 0.75rem 0.95rem;
+  margin-bottom: 1rem;
+  border-radius: 12px;
+  background: var(--red-soft);
+  border: 1px solid var(--red-soft-2);
+}
+
+.ppdb-step1-summary__info {
+  min-width: 0;
+}
+
+.ppdb-step1-summary__label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--red);
+}
+
+.ppdb-step1-summary__info strong {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ppdb-welcome-banner {
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  padding: clamp(1.25rem, 2.5vw, 1.85rem);
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 1.35rem;
+  align-items: center;
+}
+
+.ppdb-welcome-banner__eyebrow {
+  display: inline-block;
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--red);
+  margin-bottom: 0.35rem;
+}
+
+.ppdb-welcome-banner__copy h1 {
+  font-size: clamp(1.35rem, 2.2vw, 1.75rem);
+  margin: 0 0 0.45rem;
+  letter-spacing: -0.02em;
+}
+
+.ppdb-welcome-banner__copy p {
+  margin: 0 0 1.1rem;
+  color: var(--ink-2);
+  font-size: 0.92rem;
+}
+
+.ppdb-welcome-banner__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.ppdb-welcome-banner__summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.65rem;
+}
+
+.ppdb-summary-item {
+  padding: 0.75rem 0.9rem;
+  border-radius: 12px;
+  background: var(--tint);
+  border: 1px solid var(--line);
+}
+
+.ppdb-summary-item span {
+  display: block;
+  font-size: 0.74rem;
+  color: var(--ink-3);
+  margin-bottom: 0.2rem;
+}
+
+.ppdb-summary-item strong {
+  font-size: 0.88rem;
+  color: var(--ink);
+}
+
+/* Status Pill Badges — Monokrom + Biru PGRI (Zero Green Bubbles) */
+.ppdb-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.24rem 0.68rem;
+  border-radius: var(--pill);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  background: var(--tint);
+  color: var(--ink-2);
+  border: 1px solid var(--line);
+  white-space: nowrap;
+}
+
+.ppdb-status-pill::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex: 0 0 auto;
+}
+
+.adm-table .ppdb-status-pill {
+  padding: 0.18rem 0.55rem;
+  font-size: 0.71rem;
+}
+
+.ppdb-status-pill--lunas,
+.ppdb-status-pill--valid,
+.ppdb-status-pill--diterima {
+  background: var(--red-solid);
+  border-color: var(--red-solid);
+  color: #ffffff;
+}
+
+.ppdb-status-pill--terverifikasi {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--surface);
+}
+
+.ppdb-status-pill--menunggu,
+.ppdb-status-pill--menunggu_pembayaran,
+.ppdb-status-pill--menunggu_verifikasi,
+.ppdb-status-pill--proses {
+  background: var(--red-soft);
+  border-color: var(--red-soft-2);
+  color: var(--red);
+}
+
+.ppdb-status-pill--ditolak,
+.ppdb-status-pill--revisi {
+  background: var(--tint);
+  border-color: var(--ink-3);
+  color: var(--ink);
+}
+
+.ppdb-progress-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  background: var(--red-soft);
+  border: 1px solid var(--red-soft-2);
+  color: var(--red);
+  font-size: 0.82rem;
+}
+
+.ppdb-flow-grid {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.ppdb-flow-card {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1.15rem;
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.9rem;
+}
+
+.ppdb-flow-card.is-active {
+  border-color: var(--red);
+  box-shadow: 0 0 0 2px var(--red-soft);
+}
+
+.ppdb-flow-card.is-completed {
+  border-color: var(--ink);
+}
+
+.ppdb-flow-card.is-locked {
+  background: var(--tint);
+  opacity: 0.78;
+}
+
+.ppdb-flow-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.ppdb-flow-card__num {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.9rem;
+  background: var(--tint);
+  border: 1px solid var(--line);
+  color: var(--ink);
+}
+
+.ppdb-flow-card.is-active .ppdb-flow-card__num {
+  background: var(--red-solid);
+  border-color: var(--red-solid);
+  color: #ffffff;
+}
+
+.ppdb-flow-card.is-completed .ppdb-flow-card__num {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--surface);
+}
+
+.ppdb-flow-card__badge {
+  font-size: 0.73rem;
+  font-weight: 700;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: var(--tint);
+  border: 1px solid var(--line);
+  color: var(--ink-3);
+}
+
+.ppdb-flow-card.is-active .ppdb-flow-card__badge {
+  background: var(--red-soft);
+  border-color: var(--red-soft-2);
+  color: var(--red);
+}
+
+.ppdb-flow-card.is-completed .ppdb-flow-card__badge {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--surface);
+}
+
+.ppdb-flow-card__body h3 {
+  font-size: 1rem;
+  margin: 0 0 0.3rem;
+}
+
+.ppdb-flow-card__body p {
+  font-size: 0.84rem;
+  color: var(--ink-2);
+  margin: 0;
+  line-height: 1.55;
+}
+
+.ppdb-flow-card__lock-note {
+  font-size: 0.78rem;
+  color: var(--ink-3);
+  font-weight: 600;
+}
+
+.ppdb-info-duo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+.ppdb-kv-list {
+  margin: 0;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.ppdb-kv-list > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px dashed var(--line);
+  font-size: 0.86rem;
+}
+
+.ppdb-kv-list > div:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.ppdb-kv-list dt {
+  color: var(--ink-3);
+}
+
+.ppdb-kv-list dd {
+  margin: 0;
+  text-align: right;
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.ppdb-support-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+/* ---------- Jalur Pendaftaran Cards ---------- */
+
+.ppdb-current-jalur {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 1rem 1.2rem;
+  border-radius: 12px;
+  background: var(--red-soft);
+  border: 1px solid var(--red);
+  margin-bottom: 1.25rem;
+}
+
+.ppdb-current-jalur__label {
+  display: block;
+  font-size: 0.74rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--red);
+}
+
+.ppdb-current-jalur strong {
+  display: block;
+  font-size: 1.05rem;
+}
+
+.ppdb-current-jalur span:not(.ppdb-current-jalur__label) {
+  font-size: 0.82rem;
+  color: var(--ink-2);
+}
+
+.ppdb-jalur-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.15rem;
+}
+
+.ppdb-jalur-card {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+  padding: 1.35rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.1rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.ppdb-jalur-card.is-selected {
+  border-color: var(--red);
+  box-shadow: 0 0 0 2px var(--red-soft);
+}
+
+.ppdb-jalur-card__badges {
+  display: flex;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.65rem;
+}
+
+.ppdb-jalur-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.22rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 800;
+  border: 1px solid transparent;
+}
+
+.ppdb-jalur-pill::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.ppdb-jalur-pill.is-open {
+  background: var(--red-solid);
+  border-color: var(--red-solid);
+  color: #ffffff;
+}
+
+.ppdb-jalur-pill.is-closed {
+  background: var(--tint);
+  border-color: var(--line);
+  color: var(--ink-3);
+}
+
+.ppdb-jalur-pill.is-selected {
+  background: var(--red-soft);
+  border-color: var(--red-soft-2);
+  color: var(--red);
+}
+
+.ppdb-jalur-card__head h2,
+.ppdb-jalur-card__head h3 {
+  font-size: 1.18rem;
+  margin: 0 0 0.35rem;
+}
+
+.ppdb-jalur-card__period {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  color: var(--ink-3);
+  margin: 0;
+}
+
+.ppdb-jalur-card__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+}
+
+.ppdb-jalur-card__desc {
+  font-size: 0.88rem;
+  color: var(--ink-2);
+  margin: 0 0 0.9rem;
+  flex: 1 1 auto;
+}
+
+.ppdb-jalur-meta {
+  margin: 0;
+  padding: 0.75rem;
+  border-radius: 10px;
+  background: var(--tint);
+  border: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.65rem;
+}
+
+.ppdb-jalur-meta dt {
+  font-size: 0.73rem;
+  color: var(--ink-3);
+}
+
+.ppdb-jalur-meta dd {
+  margin: 0.15rem 0 0;
+  font-size: 0.88rem;
+  color: var(--ink);
+}
+
+.ppdb-jalur-req {
+  margin-top: 0.85rem;
+  font-size: 0.82rem;
+  color: var(--ink-2);
+}
+
+.ppdb-jalur-req p {
+  margin: 0.2rem 0 0;
+}
+
+/* ---------- Pembayaran, Biodata, Berkas, Kuesioner ---------- */
+
+.ppdb-invoice-grid {
+  display: grid;
+  grid-template-columns: 0.95fr 1.05fr;
+  gap: 1.25rem;
+}
+
+.ppdb-invoice-box,
+.ppdb-payment-action-box {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1.25rem;
+  background: var(--surface);
+}
+
+.ppdb-invoice-box__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-bottom: 0.9rem;
+  margin-bottom: 0.9rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.ppdb-invoice-box__head span:first-child {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--ink-3);
+}
+
+.ppdb-invoice-box__head strong {
+  font-size: 1.05rem;
+}
+
+.ppdb-gratis-state {
+  text-align: center;
+  padding: 1.25rem 0.75rem;
+}
+
+.ppdb-gratis-state__icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  background: var(--red-soft);
+  border: 1px solid var(--red-soft-2);
+  color: var(--red);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.85rem;
+}
+
+.ppdb-gratis-state h2 {
+  font-size: 1.18rem;
+  margin: 0 0 0.45rem;
+}
+
+.ppdb-gratis-state p {
+  color: var(--ink-2);
+  font-size: 0.9rem;
+  margin: 0 0 1.2rem;
+}
+
+.ppdb-bank-card {
+  border-radius: 12px;
+  padding: 1rem;
+  background: var(--tint);
+  border: 1px solid var(--line);
+  margin-bottom: 1.15rem;
+}
+
+.ppdb-bank-card__head {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 0.65rem;
+}
+
+.ppdb-bank-card__head span {
+  display: block;
+  font-size: 0.74rem;
+  color: var(--ink-3);
+}
+
+.ppdb-bank-card__number strong {
+  display: block;
+  font-size: 1.2rem;
+  letter-spacing: 0.04em;
+  color: var(--red);
+}
+
+.ppdb-bank-card__note {
+  margin: 0.65rem 0 0;
+  font-size: 0.8rem;
+  color: var(--ink-2);
+}
+
+.ppdb-fieldset {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 0;
+  margin: 0 0 1.25rem;
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.ppdb-fieldset__title {
+  margin: 0;
+  padding: 0.7rem 1.15rem;
+  border-bottom: 1px solid var(--line);
+  background: var(--tint);
+  color: var(--red);
+  font-size: 0.88rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+
+.ppdb-fieldset .ppdb-form-grid {
+  padding: 1.15rem;
+}
+
+.ppdb-form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.95rem;
+}
+
+.ppdb-field-span-full {
+  grid-column: 1 / -1;
+}
+
+.ppdb-form-foot {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+.ppdb-berkas-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem;
+}
+
+.ppdb-berkas-card {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1.15rem;
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.85rem;
+}
+
+.ppdb-berkas-card.is-uploaded {
+  border-color: var(--red-soft-2);
+}
+
+.ppdb-berkas-card__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.ppdb-berkas-card__head h2 {
+  font-size: 1rem;
+  margin: 0.25rem 0 0;
+}
+
+.ppdb-berkas-tag {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.ppdb-berkas-tag.is-req {
+  color: var(--red);
+}
+
+.ppdb-berkas-tag.is-opt {
+  color: var(--ink-3);
+}
+
+.ppdb-berkas-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  padding: 0.65rem 0.8rem;
+  border-radius: 10px;
+  background: var(--tint);
+  border: 1px solid var(--line);
+  font-size: 0.82rem;
+}
+
+.ppdb-berkas-meta strong {
+  display: block;
+  word-break: break-all;
+}
+
+.ppdb-berkas-meta span {
+  color: var(--ink-3);
+  font-size: 0.76rem;
+}
+
+.ppdb-berkas-form__row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.ppdb-file {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1 1 200px;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0.55rem 0.85rem;
+  border: 1px dashed var(--line);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--ink-2);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, color 0.2s;
+}
+
+.ppdb-file:hover {
+  border-color: var(--ink-3);
+  color: var(--ink);
+}
+
+.ppdb-file:focus-within {
+  border-color: var(--red-solid);
+  box-shadow: 0 0 0 3px var(--ring);
+}
+
+.ppdb-file.has-file {
+  border-style: solid;
+  border-color: var(--red-solid);
+  background: var(--red-soft);
+  color: var(--ink);
+}
+
+.ppdb-file input[type="file"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.ppdb-file__name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ppdb-check-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-top: 0.45rem;
+}
+
+.field label.ppdb-check-card,
+.ppdb-check-card {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  margin-bottom: 0;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--tint);
+  color: var(--ink);
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  user-select: none;
+  transition: border-color 0.18s, background-color 0.18s, box-shadow 0.18s;
+}
+
+.ppdb-check-card:hover {
+  border-color: var(--ink-3);
+  background: var(--surface);
+}
+
+.ppdb-check-card__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ppdb-check-card__box {
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  margin-top: 0.1rem;
+  border-radius: 7px;
+  border: 1.5px solid var(--ink-3);
+  background: var(--bg);
+  color: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  pointer-events: none;
+  transition: background-color 0.18s, border-color 0.18s, color 0.18s;
+}
+
+.ppdb-check-card__box .i {
+  width: 14px;
+  height: 14px;
+}
+
+.ppdb-check-card__text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.18rem;
+  min-width: 0;
+}
+
+.ppdb-check-card__text strong {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.35;
+}
+
+.ppdb-check-card__text small {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--ink-3);
+  line-height: 1.45;
+}
+
+.ppdb-check-card:has(input:focus-visible) {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--red-soft);
+  border-color: var(--red-solid);
+}
+
+.ppdb-check-card:has(input:checked) {
+  border-color: var(--red-solid);
+  background: var(--red-soft);
+}
+
+.ppdb-check-card:has(input:checked) .ppdb-check-card__box {
+  background: var(--red-solid);
+  border-color: var(--red-solid);
+  color: #ffffff;
+}
+
+.ppdb-check-card:has(input:checked) .ppdb-check-card__text small {
+  color: var(--ink-2);
+}
+
+.ppdb-pledge-box {
+  margin-top: 0.85rem;
+}
+
+.ppdb-check-card--pledge {
+  background: var(--surface);
+}
+
+/* ---------- Kartu Peserta & Pengumuman & Modal ---------- */
+
+.ppdb-print-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 1.15rem 1.35rem;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.ppdb-print-toolbar__actions {
+  display: flex;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.ppdb-participant-card {
+  border: 2px solid var(--ink);
+  border-radius: 14px;
+  background: var(--surface);
+  padding: clamp(1.25rem, 3vw, 2rem);
+  max-width: 860px;
+}
+
+.ppdb-participant-card__head {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  padding-bottom: 1.1rem;
+  border-bottom: 2px solid var(--ink);
+}
+
+.ppdb-participant-card__school span {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: var(--ink-2);
+}
+
+.ppdb-participant-card__school h2 {
+  font-size: 1.35rem;
+  margin: 0.15rem 0;
+}
+
+.ppdb-participant-card__school p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--ink-2);
+}
+
+.ppdb-participant-card__regno {
+  text-align: right;
+  padding: 0.55rem 0.85rem;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--tint);
+}
+
+.ppdb-participant-card__regno span {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: var(--ink-3);
+}
+
+.ppdb-participant-card__regno strong {
+  display: block;
+  font-size: 1rem;
+  color: var(--red);
+}
+
+.ppdb-participant-card__body {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 1.5rem;
+  padding: 1.35rem 0;
+  align-items: start;
+}
+
+.ppdb-participant-card__photo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.ppdb-participant-card__photo img,
+.ppdb-participant-card__photo-placeholder {
+  width: 120px;
+  height: 160px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  object-fit: cover;
+  background: var(--tint);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink-3);
+  font-size: 0.78rem;
+}
+
+.ppdb-participant-card__table {
+  margin: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.ppdb-participant-card__table > div {
+  display: grid;
+  grid-template-columns: 210px 1fr;
+  gap: 0.75rem;
+  padding-bottom: 0.45rem;
+  border-bottom: 1px dashed var(--line);
+  font-size: 0.88rem;
+}
+
+.ppdb-participant-card__table dt {
+  color: var(--ink-2);
+}
+
+.ppdb-participant-card__table dd {
+  margin: 0;
+  color: var(--ink);
+}
+
+.ppdb-participant-card__foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.82rem;
+}
+
+.ppdb-participant-card__notes ol {
+  margin: 0.35rem 0 0 1.1rem;
+  padding: 0;
+  color: var(--ink-2);
+}
+
+.ppdb-participant-card__sign {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.ppdb-announce-banner {
+  padding: 1.5rem;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: var(--tint);
+}
+
+.ppdb-announce-banner h2 {
+  font-size: 1.3rem;
+  margin: 0.65rem 0 0.45rem;
+}
+
+.ppdb-announce-note {
+  margin-top: 1rem;
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+
+.ppdb-announce-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.ppdb-faq-list {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.ppdb-faq-item {
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--tint);
+}
+
+.ppdb-faq-item h2 {
+  font-size: 0.96rem;
+  margin: 0 0 0.35rem;
+}
+
+.ppdb-faq-item p {
+  margin: 0;
+  font-size: 0.86rem;
+  color: var(--ink-2);
+}
+
+.ppdb-contact-box {
+  padding: 1.15rem;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.ppdb-contact-box h2 {
+  font-size: 1.05rem;
+  margin: 0 0 0.85rem;
+}
+
+.ppdb-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.ppdb-modal[hidden] {
+  display: none !important;
+}
+
+.ppdb-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.62);
+  backdrop-filter: blur(3px);
+}
+
+.ppdb-modal__dialog {
+  position: relative;
+  z-index: 1;
+  width: min(680px, 100%);
+  max-height: 88vh;
+  overflow-y: auto;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  box-shadow: var(--shadow-lg);
+  padding: clamp(1.2rem, 2.5vw, 1.75rem);
+}
+
+.ppdb-modal__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.ppdb-modal__head h2 {
+  margin: 0.2rem 0 0;
+  font-size: 1.25rem;
+}
+
+.ppdb-modal__lead {
+  color: var(--ink-2);
+  font-size: 0.9rem;
+  margin: 0.9rem 0 1rem;
+}
+
+.ppdb-guide-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.ppdb-guide-list li {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: 0.75rem;
+  align-items: start;
+  padding: 0.75rem;
+  border-radius: 12px;
+  background: var(--tint);
+  border: 1px solid var(--line);
+}
+
+.ppdb-guide-list__num {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: var(--red-solid);
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 0.84rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ppdb-guide-list__num.is-pending {
+  background: var(--tint);
+  color: var(--ink-3);
+  border: 1px solid var(--line);
+}
+
+.ppdb-guide-list strong {
+  display: block;
+  font-size: 0.92rem;
+  margin-bottom: 0.2rem;
+}
+
+.ppdb-guide-list p {
+  margin: 0;
+  font-size: 0.83rem;
+  color: var(--ink-2);
+}
+
+.ppdb-modal__foot {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+  margin-top: 1.15rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--line);
+}
+
+@media (max-width: 980px) {
+  .ppdb-auth-grid,
+  .ppdb-welcome-banner,
+  .ppdb-invoice-grid,
+  .ppdb-info-duo {
+    grid-template-columns: 1fr;
+  }
+
+  .ppdb-auth-poster {
+    min-height: 320px;
+  }
+
+  .ppdb-flow-grid,
+  .ppdb-jalur-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .ppdb-form-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .ppdb-flow-grid,
+  .ppdb-jalur-grid,
+  .ppdb-form-grid,
+  .ppdb-berkas-grid,
+  .ppdb-check-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ppdb-auth-steps {
+    grid-template-columns: 1fr;
+  }
+
+  .ppdb-auth-actions--split {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .ppdb-auth-actions--split .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .ppdb-auth-poster {
+    min-height: 0;
+  }
+
+  .ppdb-auth-poster__content {
+    gap: 1rem;
+    padding: 1.25rem;
+  }
+
+  .ppdb-auth-poster__list,
+  .ppdb-auth-poster__foot {
+    display: none;
+  }
+
+  .ppdb-auth-poster__body h2 {
+    font-size: 1.3rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .ppdb-auth-poster__body p {
+    font-size: 0.86rem;
+    margin: 0;
+  }
+
+  .ppdb-participant-card__head,
+  .ppdb-participant-card__body,
+  .ppdb-participant-card__table > div {
+    grid-template-columns: 1fr;
+  }
+
+  .ppdb-participant-card__regno,
+  .ppdb-participant-card__sign {
+    text-align: left;
+  }
+
+  .ppdb-topbar-chip--school {
+    display: none;
+  }
+
+  .ppdb-welcome-banner__summary {
+    grid-template-columns: 1fr;
+  }
+
+  .ppdb-portal-stack .adm-panel__body {
+    padding: 1rem;
+  }
+
+  .ppdb-welcome-banner__actions,
+  .ppdb-print-toolbar__actions,
+  .ppdb-announce-actions,
+  .ppdb-support-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  .ppdb-welcome-banner__actions .btn,
+  .ppdb-print-toolbar__actions .btn,
+  .ppdb-announce-actions .btn,
+  .ppdb-support-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .ppdb-jalur-filter {
+    width: 100%;
+  }
+
+  .ppdb-fieldset .ppdb-form-grid {
+    padding: 1rem;
+  }
+
+  .ppdb-portal-stack .adm-panel > *:not(.adm-panel__head):not(.adm-panel__body):not(.adm-table-wrap),
+  .ppdb-portal-stack .adm-empty {
+    margin: 1rem !important;
+  }
+
+  .ppdb-portal-stack .adm-panel__head {
+    padding: 1rem;
+  }
+}
+
+@media print {
+  .ppdb-sidebar,
+  .ppdb-topbar,
+  .no-print {
+    display: none !important;
+  }
+
+  .ppdb-main {
+    padding: 0 !important;
+  }
+
+  .ppdb-participant-card {
+    border: 2px solid #000 !important;
+    box-shadow: none !important;
   }
 }

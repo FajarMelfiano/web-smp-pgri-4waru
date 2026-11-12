@@ -49,10 +49,10 @@
             </a>
           </li>
           <li>
-            <a class="adm-nav__link {{ request()->routeIs('admin.ppdb') ? 'is-active' : '' }}" href="{{ route('admin.ppdb') }}" @if(request()->routeIs('admin.ppdb')) aria-current="page" @endif>
+            <a class="adm-nav__link {{ request()->routeIs('admin.ppdb*') ? 'is-active' : '' }}" href="{{ route('admin.ppdb') }}" @if(request()->routeIs('admin.ppdb*')) aria-current="page" @endif>
               <svg class="i" aria-hidden="true"><use href="#i-users"/></svg>
               <span>Pendaftar PPDB</span>
-              <span class="adm-nav__count">{{ $stats['total'] ?? 0 }}</span>
+              <span class="adm-nav__count">{{ ($stats['online_total'] ?? 0) + ($stats['total'] ?? 0) }}</span>
             </a>
           </li>
           <li>

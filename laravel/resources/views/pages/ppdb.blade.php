@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'PPDB — SMP PGRI 4 Waru')
+@section('title', 'PPDB | SMP PGRI 4 Waru')
 @section('description', 'Alur pendaftaran siswa baru SMP PGRI 4 Waru: empat langkah di kantor sekolah, dokumen yang disiapkan, dan formulir pesan.')
 @section('og_title', 'Penerimaan siswa baru SMP PGRI 4 Waru')
 
@@ -15,9 +15,14 @@
     <div class="wrap">
       <p class="crumbs"><a href="{{ route('beranda') }}">Beranda</a> <span aria-hidden="true">/</span> PPDB</p>
       <h1>Penerimaan siswa baru</h1>
-      <p class="lead">Pendaftaran dilakukan di kantor sekolah. Halaman ini menjelaskan alurnya, dokumen yang perlu disiapkan, dan menyusun pesan yang bisa kamu kirim sendiri.</p>
+      <p class="lead">Daftar langsung secara online melalui Portal PPDB Resmi SMP PGRI 4 Waru atau datang langsung ke kantor sekretariat sekolah. Halaman ini memuat jalur pendaftaran, cek kesiapan berkas, serta formulir konsultasi cepat.</p>
       <div class="hero__actions no-print">
-        <a class="btn btn--primary" href="tel:+62318538447">Telepon sekolah</a>
+        @auth('ppdb')
+          <a class="btn btn--primary" href="{{ route('ppdb.portal.beranda') }}">Buka Portal PPDB Saya <svg class="i i--arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        @else
+          <a class="btn btn--primary" href="{{ route('ppdb.daftar') }}">Daftar PPDB Online <svg class="i i--arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          <a class="btn btn--ghost" href="{{ route('ppdb.masuk') }}">Masuk Portal Siswa</a>
+        @endauth
         @if(!empty($siteSettings['brosur_ppdb_path']))
           <a class="btn btn--ghost" href="{{ asset('storage/'.$siteSettings['brosur_ppdb_path']) }}" target="_blank" rel="noopener">Unduh Brosur PPDB <svg class="i" aria-hidden="true"><use href="#i-upright"/></svg></a>
         @endif
@@ -28,6 +33,63 @@
       @endif
     </div>
   </div>
+
+  @if(isset($jalurList) && $jalurList->isNotEmpty())
+    <section class="section section--tint" aria-labelledby="jalur-online">
+      <div class="wrap">
+        <div class="sec-head rise">
+          <p class="eyebrow">Portal PPDB Online · T.A. {{ $siteSettings['tahun_ajaran'] ?? '2026/2027' }}</p>
+          <h2 id="jalur-online">Jalur &amp; gelombang <span class="accent">pendaftaran online</span></h2>
+          <span class="rule"></span>
+          <p>Buat akun calon siswa, pilih salah satu jalur di bawah ini, unggah berkas persyaratan dari rumah, dan cetak Kartu Peserta resmi.</p>
+        </div>
+
+        <div class="ppdb-jalur-grid rise">
+          @foreach($jalurList as $jalur)
+            <article class="ppdb-jalur-card {{ !$jalur->dibuka ? 'is-closed' : '' }}">
+              <div class="ppdb-jalur-card__head">
+                <div class="ppdb-jalur-card__badges">
+                  <span class="ppdb-jalur-pill {{ $jalur->dibuka ? 'is-open' : 'is-closed' }}">
+                    {{ $jalur->dibuka ? 'Dibuka' : 'Ditutup' }}
+                  </span>
+                </div>
+                <h3>{{ $jalur->nama }}</h3>
+                <p class="ppdb-jalur-card__period">
+                  <svg class="i" aria-hidden="true"><use href="#i-clock"/></svg>
+                  <span>{{ $jalur->periodeLabel() }}</span>
+                </p>
+              </div>
+              <div class="ppdb-jalur-card__body">
+                @if($jalur->deskripsi)
+                  <p class="ppdb-jalur-card__desc">{{ $jalur->deskripsi }}</p>
+                @endif
+                <dl class="ppdb-jalur-meta">
+                  <div>
+                    <dt>Biaya Formulir</dt>
+                    <dd><strong>{{ $jalur->biayaLabel() }}</strong></dd>
+                  </div>
+                  <div>
+                    <dt>Kuota Kursi</dt>
+                    <dd>{{ $jalur->kuota ? $jalur->kuota . ' kursi' : 'Sesuai pagu' }}</dd>
+                  </div>
+                </dl>
+              </div>
+              <div class="ppdb-jalur-card__foot">
+                @auth('ppdb')
+                  <a href="{{ route('ppdb.portal.jalur') }}" class="btn btn--primary ppdb-btn-block">Pilih di Portal Siswa <svg class="i i--arrow" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+                @else
+                  <a href="{{ route('ppdb.daftar') }}" class="btn {{ $jalur->dibuka ? 'btn--primary' : 'btn--ghost' }} ppdb-btn-block">
+                    <span>{{ $jalur->dibuka ? 'Daftar Jalur Ini' : 'Lihat Detail di Portal' }}</span>
+                    <svg class="i i--arrow" aria-hidden="true"><use href="#i-arrow"/></svg>
+                  </a>
+                @endauth
+              </div>
+            </article>
+          @endforeach
+        </div>
+      </div>
+    </section>
+  @endif
 
   <section class="section" aria-labelledby="alur">
     <div class="wrap">

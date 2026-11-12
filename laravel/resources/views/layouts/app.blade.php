@@ -97,6 +97,7 @@
           <a href="{{ route('alumni.index') }}">Alumni</a>
           <a href="{{ route('ppdb') }}">PPDB</a>
           <a href="{{ route('kontak') }}">Kontak</a>
+          <a href="{{ auth('web')->check() ? route('admin') : route('login') }}">Panel Petugas</a>
         </div>
       </div>
       <div>

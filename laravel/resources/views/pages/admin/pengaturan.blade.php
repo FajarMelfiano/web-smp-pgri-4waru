@@ -260,13 +260,41 @@
           </div>
           <div class="field">
             <label for="set-status-ppdb">Label status pendaftaran PPDB</label>
-            <input id="set-status-ppdb" name="status_ppdb" type="text" value="{{ old('status_ppdb', $settings['status_ppdb'] ?? 'Dibuka — Layanan Kantor Sekolah') }}">
+            <input id="set-status-ppdb" name="status_ppdb" type="text" value="{{ old('status_ppdb', $settings['status_ppdb'] ?? 'Dibuka: Layanan Kantor Sekolah') }}">
           </div>
         </div>
 
         <div class="field">
           <label for="set-ppdb">Catatan / Pengumuman khusus PPDB (ditampilkan pada halaman PPDB)</label>
           <textarea id="set-ppdb" name="pengumuman_ppdb" rows="3">{{ old('pengumuman_ppdb', $settings['pengumuman_ppdb'] ?? '') }}</textarea>
+        </div>
+
+        <hr style="border:0;border-top:1px solid var(--line);margin:1.5rem 0">
+
+        <div class="adm-panel__title" style="margin-bottom:1rem">
+          <h3>5. Konfigurasi Rekening Pembayaran &amp; WhatsApp PPDB Online</h3>
+        </div>
+
+        <div class="adm-form-grid-2">
+          <div class="field">
+            <label for="set-wa-ppdb">Nomor WhatsApp Panitia PPDB (format 628xxx)</label>
+            <input id="set-wa-ppdb" name="whatsapp_ppdb" type="text" value="{{ old('whatsapp_ppdb', $settings['whatsapp_ppdb'] ?? '62318538447') }}">
+          </div>
+          <div class="field">
+            <label for="set-bank-nama">Nama Bank Rekening PPDB</label>
+            <input id="set-bank-nama" name="ppdb_bank_nama" type="text" value="{{ old('ppdb_bank_nama', $settings['ppdb_bank_nama'] ?? 'Bank Jatim') }}">
+          </div>
+        </div>
+
+        <div class="adm-form-grid-2">
+          <div class="field">
+            <label for="set-bank-rek">Nomor Rekening PPDB</label>
+            <input id="set-bank-rek" name="ppdb_bank_rekening" type="text" value="{{ old('ppdb_bank_rekening', $settings['ppdb_bank_rekening'] ?? '0262041979') }}">
+          </div>
+          <div class="field">
+            <label for="set-bank-an">Atas Nama Rekening</label>
+            <input id="set-bank-an" name="ppdb_bank_atas_nama" type="text" value="{{ old('ppdb_bank_atas_nama', $settings['ppdb_bank_atas_nama'] ?? 'Panitia PPDB SMP PGRI 4 Waru') }}">
+          </div>
         </div>
 
         <div class="form-actions">

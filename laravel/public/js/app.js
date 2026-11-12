@@ -873,4 +873,413 @@
       });
     });
   });
+
+  /* ---------- Sidebar Portal & Admin Mobile ---------- */
+
+  var admToggle = document.querySelector("[data-adm-toggle]");
+  var admSidebar = document.getElementById("adm-sidebar");
+  var admBackdrop = document.querySelector("[data-adm-backdrop]");
+
+  if (admToggle && admSidebar && !admToggle.hasAttribute("data-adm-bound")) {
+    admToggle.setAttribute("data-adm-bound", "true");
+    var setAdmOpen = function (open) {
+      admSidebar.classList.toggle("is-open", open);
+      if (admBackdrop) admBackdrop.classList.toggle("is-open", open);
+      admToggle.setAttribute("aria-expanded", open ? "true" : "false");
+    };
+    admToggle.addEventListener("click", function () {
+      setAdmOpen(!admSidebar.classList.contains("is-open"));
+    });
+    if (admBackdrop) {
+      admBackdrop.addEventListener("click", function () {
+        setAdmOpen(false);
+      });
+    }
+  }
+
+  /* ---------- Accordion Menu Pendaftaran (Portal Siswa) ---------- */
+
+  [].forEach.call(document.querySelectorAll("[data-ppdb-acc]"), function (acc) {
+    var btn = acc.querySelector("[data-ppdb-acc-toggle]");
+    var subnav = acc.querySelector(".ppdb-subnav");
+    if (!btn || !subnav) return;
+
+    btn.addEventListener("click", function () {
+      var open = acc.classList.toggle("is-open");
+      subnav.hidden = !open;
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+  });
+
+  /* ---------- Modal Tata Cara Pendaftaran ---------- */
+
+  var guideModal = document.getElementById("ppdb-guide-modal");
+  if (guideModal) {
+    try {
+      sessionStorage.removeItem("smp4-ppdb-reg-draft");
+    } catch (e) {}
+    var guideOpens = [].slice.call(
+      document.querySelectorAll("[data-ppdb-guide-open]")
+    );
+    var guideCloses = [].slice.call(
+      guideModal.querySelectorAll("[data-ppdb-guide-close]")
+    );
+    var lastGuideTrigger = null;
+
+    var openGuideModal = function (trigger) {
+      lastGuideTrigger = trigger || document.activeElement;
+      guideModal.hidden = false;
+      var closeBtn = guideModal.querySelector("[data-ppdb-guide-close].icon-btn");
+      if (closeBtn) closeBtn.focus();
+    };
+
+    var closeGuideModal = function () {
+      guideModal.hidden = true;
+      if (lastGuideTrigger && typeof lastGuideTrigger.focus === "function") {
+        lastGuideTrigger.focus();
+      }
+    };
+
+    guideOpens.forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        openGuideModal(btn);
+      });
+    });
+
+    guideCloses.forEach(function (btn) {
+      btn.addEventListener("click", closeGuideModal);
+    });
+
+    document.addEventListener("keydown", function (event) {
+      if (!guideModal.hidden && event.key === "Escape") {
+        closeGuideModal();
+      }
+    });
+  }
+
+  /* ---------- Toggle Tampilkan / Sembunyikan Kata Sandi ---------- */
+
+  [].forEach.call(
+    document.querySelectorAll("[data-pw-toggle]"),
+    function (btn) {
+      btn.addEventListener("click", function () {
+        var targetId = btn.getAttribute("data-pw-toggle");
+        var input = document.getElementById(targetId);
+        if (!input) return;
+
+        var isPw = input.type === "password";
+        input.type = isPw ? "text" : "password";
+
+        var showIcon = btn.querySelector("[data-pw-icon-show]");
+        var hideIcon = btn.querySelector("[data-pw-icon-hide]");
+        if (showIcon) showIcon.hidden = isPw;
+        if (hideIcon) hideIcon.hidden = !isPw;
+        btn.setAttribute(
+          "aria-label",
+          isPw ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"
+        );
+      });
+    }
+  );
+
+  /* ---------- Registrasi Akun PPDB 2 Langkah & Aturan Sandi ---------- */
+
+  var regForm = document.querySelector("[data-ppdb-register-form]");
+  if (regForm) {
+    var pane1 = regForm.querySelector('[data-reg-pane="1"]');
+    var pane2 = regForm.querySelector('[data-reg-pane="2"]');
+    var ind1 = document.querySelector('[data-reg-step-indicator="1"]');
+    var ind2 = document.querySelector('[data-reg-step-indicator="2"]');
+    var nextBtn = regForm.querySelector("[data-reg-next]");
+    var prevBtns = regForm.querySelectorAll("[data-reg-prev]");
+    var emailPreview = regForm.querySelector("[data-reg-email-preview]");
+    var step1Url = regForm.getAttribute("data-step1-url");
+    var csrfInput = regForm.querySelector('input[name="_token"]');
+
+    var emailInput = document.getElementById("reg-email");
+    var pwInput = document.getElementById("reg-password");
+    var pwConfirmInput = document.getElementById("reg-password-confirm");
+    var namaInput = document.getElementById("reg-nama");
+    var tglLahirInput = document.getElementById("reg-tgl-lahir");
+    var waInput = document.getElementById("reg-wa");
+    var nikInput = document.getElementById("reg-nik");
+    var DRAFT_KEY = "smp4-ppdb-reg-draft";
+
+    var ruleLen = regForm.querySelector('[data-pw-rule="length"]');
+    var ruleCase = regForm.querySelector('[data-pw-rule="case"]');
+    var ruleDigit = regForm.querySelector('[data-pw-rule="digit"]');
+
+    var setRegError = function (field, msg) {
+      var errEl = regForm.querySelector('[data-field-error="' + field + '"]');
+      if (errEl) errEl.textContent = msg || "";
+    };
+
+    var evalPwRules = function () {
+      var val = pwInput ? pwInput.value : "";
+      var okLen = val.length >= 8 && val.length <= 16;
+      var okCase = /[a-z]/.test(val) && /[A-Z]/.test(val);
+      var okDigit = /[0-9]/.test(val);
+
+      if (ruleLen) ruleLen.classList.toggle("is-valid", okLen);
+      if (ruleCase) ruleCase.classList.toggle("is-valid", okCase);
+      if (ruleDigit) ruleDigit.classList.toggle("is-valid", okDigit);
+
+      return okLen && okCase && okDigit;
+    };
+
+    var saveLocalDraft = function () {
+      try {
+        sessionStorage.setItem(
+          DRAFT_KEY,
+          JSON.stringify({
+            email: emailInput ? emailInput.value.trim() : "",
+            nama: namaInput ? namaInput.value : "",
+            tglLahir: tglLahirInput ? tglLahirInput.value : "",
+            wa: waInput ? waInput.value : "",
+            nik: nikInput ? nikInput.value : "",
+          })
+        );
+      } catch (e) {}
+    };
+
+    var restoreLocalDraft = function () {
+      try {
+        var raw = sessionStorage.getItem(DRAFT_KEY);
+        if (!raw) return;
+        var data = JSON.parse(raw);
+        if (emailInput && !emailInput.value && data.email) emailInput.value = data.email;
+        if (namaInput && !namaInput.value && data.nama) namaInput.value = data.nama;
+        if (tglLahirInput && !tglLahirInput.value && data.tglLahir) tglLahirInput.value = data.tglLahir;
+        if (waInput && !waInput.value && data.wa) waInput.value = data.wa;
+        if (nikInput && !nikInput.value && data.nik) nikInput.value = data.nik;
+      } catch (e) {}
+    };
+
+    restoreLocalDraft();
+
+    [emailInput, namaInput, tglLahirInput, waInput, nikInput].forEach(function (el) {
+      if (!el) return;
+      el.addEventListener("input", function () {
+        saveLocalDraft();
+        if (el === emailInput) setRegError("email", "");
+        if (el === namaInput) setRegError("nama_lengkap", "");
+        if (el === tglLahirInput) setRegError("tanggal_lahir", "");
+        if (el === waInput) setRegError("whatsapp", "");
+        if (el === nikInput) {
+          el.value = el.value.replace(/[^0-9]/g, "").slice(0, 16);
+          setRegError("nik", "");
+        }
+      });
+    });
+
+    if (pwInput) {
+      pwInput.addEventListener("input", function () {
+        evalPwRules();
+        setRegError("password", "");
+      });
+      evalPwRules();
+    }
+
+    if (pwConfirmInput) {
+      pwConfirmInput.addEventListener("input", function () {
+        setRegError("password_confirmation", "");
+      });
+    }
+
+    var switchRegStep = function (step) {
+      if (!pane1 || !pane2) return;
+      var isStep1 = step === 1;
+      pane1.hidden = !isStep1;
+      pane2.hidden = isStep1;
+
+      if (emailPreview && emailInput && emailInput.value.trim()) {
+        emailPreview.textContent = emailInput.value.trim();
+      }
+
+      if (ind1) {
+        ind1.classList.toggle("is-active", isStep1);
+        ind1.classList.toggle("is-done", !isStep1);
+      }
+      if (ind2) {
+        ind2.classList.toggle("is-active", !isStep1);
+      }
+    };
+
+    var validateStep1Fields = function () {
+      var emailVal = emailInput ? emailInput.value.trim() : "";
+      var pwVal = pwInput ? pwInput.value : "";
+      var confirmVal = pwConfirmInput ? pwConfirmInput.value : "";
+      var valid = true;
+
+      if (!emailVal || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
+        setRegError("email", "Masukkan alamat email yang valid.");
+        if (emailInput) emailInput.focus();
+        valid = false;
+      } else {
+        setRegError("email", "");
+      }
+
+      if (!evalPwRules()) {
+        setRegError(
+          "password",
+          "Kata sandi wajib 8 sampai 16 karakter, huruf besar & kecil, serta minimal 1 angka."
+        );
+        if (valid && pwInput) pwInput.focus();
+        valid = false;
+      } else {
+        setRegError("password", "");
+      }
+
+      if (!confirmVal || confirmVal !== pwVal) {
+        setRegError(
+          "password_confirmation",
+          "Konfirmasi kata sandi belum sama."
+        );
+        if (valid && pwConfirmInput) pwConfirmInput.focus();
+        valid = false;
+      } else {
+        setRegError("password_confirmation", "");
+      }
+
+      return valid;
+    };
+
+    var advanceToStep2 = function () {
+      if (!validateStep1Fields()) return;
+      saveLocalDraft();
+
+      if (!step1Url || !window.fetch) {
+        switchRegStep(2);
+        if (namaInput) namaInput.focus();
+        return;
+      }
+
+      if (nextBtn) nextBtn.disabled = true;
+
+      fetch(step1Url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "X-CSRF-TOKEN": csrfInput ? csrfInput.value : "",
+        },
+        credentials: "same-origin",
+        body: JSON.stringify({
+          email: emailInput ? emailInput.value.trim() : "",
+          password: pwInput ? pwInput.value : "",
+          password_confirmation: pwConfirmInput ? pwConfirmInput.value : "",
+        }),
+      })
+        .then(function (res) {
+          return res.json().then(function (body) {
+            return { status: res.status, body: body };
+          });
+        })
+        .then(function (result) {
+          if (nextBtn) nextBtn.disabled = false;
+          if (result.status === 422 && result.body && result.body.errors) {
+            var errs = result.body.errors;
+            if (errs.email && errs.email[0]) {
+              setRegError("email", errs.email[0]);
+              if (emailInput) emailInput.focus();
+            }
+            if (errs.password && errs.password[0]) {
+              setRegError("password", errs.password[0]);
+              if (!errs.email && pwInput) pwInput.focus();
+            }
+            return;
+          }
+          switchRegStep(2);
+          if (namaInput) namaInput.focus();
+        })
+        .catch(function () {
+          if (nextBtn) nextBtn.disabled = false;
+          switchRegStep(2);
+          if (namaInput) namaInput.focus();
+        });
+    };
+
+    if (nextBtn) {
+      nextBtn.addEventListener("click", advanceToStep2);
+    }
+
+    [].forEach.call(prevBtns, function (btn) {
+      btn.addEventListener("click", function () {
+        switchRegStep(1);
+        if (emailInput) emailInput.focus();
+      });
+    });
+
+    regForm.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" && pane1 && !pane1.hidden) {
+        e.preventDefault();
+        advanceToStep2();
+      }
+    });
+
+    regForm.addEventListener("submit", function (e) {
+      if (pane1 && !pane1.hidden) {
+        e.preventDefault();
+        advanceToStep2();
+        return;
+      }
+
+      var validStep2 = true;
+      var namaVal = namaInput ? namaInput.value.trim() : "";
+      var tglVal = tglLahirInput ? tglLahirInput.value.trim() : "";
+      var waVal = waInput ? waInput.value.replace(/[^0-9]/g, "") : "";
+      var nikVal = nikInput ? nikInput.value.replace(/[^0-9]/g, "") : "";
+
+      if (!namaVal) {
+        setRegError("nama_lengkap", "Masukkan nama lengkap calon siswa.");
+        if (validStep2 && namaInput) namaInput.focus();
+        validStep2 = false;
+      } else {
+        setRegError("nama_lengkap", "");
+      }
+
+      if (!tglVal) {
+        setRegError("tanggal_lahir", "Pilih tanggal lahir calon siswa.");
+        if (validStep2 && tglLahirInput) tglLahirInput.focus();
+        validStep2 = false;
+      } else {
+        setRegError("tanggal_lahir", "");
+      }
+
+      if (!waVal || waVal.length < 8) {
+        setRegError("whatsapp", "Masukkan nomor WhatsApp aktif yang valid.");
+        if (validStep2 && waInput) waInput.focus();
+        validStep2 = false;
+      } else {
+        setRegError("whatsapp", "");
+      }
+
+      if (nikVal.length !== 16) {
+        setRegError("nik", "NIK calon siswa wajib tepat 16 angka.");
+        if (validStep2 && nikInput) nikInput.focus();
+        validStep2 = false;
+      } else {
+        setRegError("nik", "");
+      }
+
+      if (!validStep2) {
+        e.preventDefault();
+      }
+    });
+  }
+  /* ---------- Unggah Berkas: tampilkan nama file terpilih ---------- */
+
+  [].forEach.call(document.querySelectorAll(".ppdb-file"), function (wrap) {
+    var input = wrap.querySelector('input[type="file"]');
+    var label = wrap.querySelector("[data-file-name]");
+    if (!input || !label) return;
+
+    var defaultText = label.textContent;
+
+    input.addEventListener("change", function () {
+      var file = input.files && input.files[0];
+      label.textContent = file ? file.name : defaultText;
+      wrap.classList.toggle("has-file", Boolean(file));
+    });
+  });
 })();

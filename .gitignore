@@ -24,3 +24,6 @@ laravel/storage/logs/*.log
 *.log
 .DS_Store
 Thumbs.db
+
+# artefak arsip lokal
+laravel/project_changes.zip
