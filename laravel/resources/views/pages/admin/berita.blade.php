@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
-@section('title', 'Studio Berita & Pengumuman — Admin SMP PGRI 4 Waru')
-@section('description', 'Tulis dan kelola artikel berita, informasi kegiatan, serta pengumuman resmi SMP PGRI 4 Waru dengan studio editor bergaya Blogger.')
+@section('title', 'Berita & Pengumuman — Admin SMP PGRI 4 Waru')
+@section('description', 'Tulis dan kelola artikel berita, informasi kegiatan, serta pengumuman resmi SMP PGRI 4 Waru.')
 @section('crumb', 'Berita & Pengumuman')
 
 @php
@@ -26,8 +26,8 @@
 @section('content')
   <div class="adm-page-head">
     <div>
-      <h1>Studio Berita &amp; Pengumuman</h1>
-      <p>Tulis artikel kegiatan siswa, pengumuman akademik, dan berita sekolah dengan editor visual bergaya Blogger.</p>
+      <h1>Berita &amp; Pengumuman</h1>
+      <p>Tulis artikel kegiatan siswa, pengumuman akademik, dan berita sekolah. Isi artikel tampil di Beranda dan halaman <code>/berita</code>.</p>
     </div>
     <div class="adm-actions">
       <a class="btn btn--ghost btn--sm" href="#daftar-artikel">
@@ -35,10 +35,9 @@
       </a>
       <a class="btn btn--ghost btn--sm" href="{{ route('berita.index') }}">
         <span>Lihat Halaman Berita Publik</span>
-        <svg class="i" aria-hidden="true"><use href="#i-upright"/></svg>
       </a>
       @if($editPost)
-        <a class="btn btn--primary btn--sm" href="{{ route('admin.berita') }}">+ Entri Baru</a>
+        <a class="btn btn--primary btn--sm" href="{{ route('admin.berita') }}">Entri Baru</a>
       @endif
     </div>
   </div>
@@ -65,12 +64,7 @@
             <svg aria-hidden="true"><use href="#i-pencil-mark"/></svg>
           </div>
           <div class="blogger-title-wrap">
-            <div class="blogger-title-meta">
-              <span id="editor-berita-heading">{{ $editPost ? 'Mode Sunting Entri' : 'Entri Berita Baru' }}</span>
-              @if($editPost)
-                <span class="adm-status adm-status--{{ $editPost->status }}">{{ ucfirst($editPost->status) }}</span>
-              @endif
-            </div>
+            <h2 id="editor-berita-heading" class="sr-only">Editor isi berita</h2>
             <label for="berita-judul" class="sr-only">Judul berita atau pengumuman</label>
             <input
               id="berita-judul"
@@ -88,14 +82,18 @@
         </div>
 
         <div class="blogger-topbar__actions">
+          @if($editPost)
+            <span class="adm-status adm-status--{{ $editPost->status }}">{{ ucfirst($editPost->status) }}</span>
+          @endif
+
           <div class="blogger-mode-switch" role="tablist" aria-label="Mode tampilan editor">
             <button type="button" class="blogger-mode-btn is-active" data-editor-mode="visual" role="tab" aria-selected="true">
               <svg aria-hidden="true"><use href="#i-ed-visual"/></svg>
-              <span>Tampilan Visual</span>
+              <span>Visual</span>
             </button>
             <button type="button" class="blogger-mode-btn" data-editor-mode="html" role="tab" aria-selected="false">
               <svg aria-hidden="true"><use href="#i-ed-code"/></svg>
-              <span>Tampilan HTML</span>
+              <span>HTML</span>
             </button>
             <button type="button" class="blogger-mode-btn" data-editor-mode="preview" role="tab" aria-selected="false">
               <svg aria-hidden="true"><use href="#i-ed-eye"/></svg>
@@ -252,7 +250,7 @@
               role="textbox"
               aria-multiline="true"
               aria-label="Lembar penulisan isi berita"
-              data-placeholder="Mulai tulis isi berita, pengumuman kegiatan siswa, atau informasi resmi sekolah di lembar ini..."
+              data-placeholder="Mulai tulis isi berita di sini..."
             ></div>
 
             {{-- Editor Kode HTML / Fallback Textarea --}}
@@ -275,18 +273,17 @@
                 <p id="preview-summary" style="margin-top:0.45rem;color:var(--ink-3);font-size:0.95rem"></p>
               </div>
               <figure id="preview-cover-wrap" class="article-cover" style="display:none;margin-bottom:1.5rem">
-                <img id="preview-cover-img" src="" alt="Pratinjau sampul">
+                <img id="preview-cover-img" alt="Pratinjau sampul">
               </figure>
               <div id="preview-body" class="prose prose--article"></div>
             </div>
           </div>
         </div>
 
-        {{-- SIDEBAR SETELAN ENTRI KANAN (BLOGGER POST SETTINGS) --}}
+        {{-- Panel Setelan Entri (Kanan) --}}
         <aside class="blogger-sidebar" aria-label="Setelan Entri Berita">
           <div class="blogger-sidebar__head">
             <h3>Setelan Entri</h3>
-            <span class="adm-panel__badge">Blogger Studio</span>
           </div>
 
           {{-- 1. Status Publikasi --}}
@@ -322,7 +319,7 @@
                     <strong>Belum ada gambar sampul</strong>
                     <span style="display:block;margin-top:0.2rem">Unggah berkas foto atau pilih foto dokumentasi sekolah di bawah.</span>
                   </div>
-                  <img id="blogger-cover-img" src="" alt="Pratinjau sampul berita" style="display:none">
+                  <img id="blogger-cover-img" alt="Pratinjau sampul berita" style="display:none">
                 @endif
               </div>
 

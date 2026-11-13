@@ -200,6 +200,7 @@ Route::middleware('auth:web')->group(function (): void {
 
     Route::get('/admin/akun', [AdminAccountController::class, 'edit'])->name('admin.account');
     Route::post('/admin/akun/sandi', [AdminAccountController::class, 'updatePassword'])->middleware('throttle:6,1')->name('admin.account.password');
+    Route::get('/admin/petugas/{user}/sandi', [AdminAccountController::class, 'editPetugasPassword'])->middleware('role:admin')->name('admin.petugas.password.edit');
     Route::post('/admin/petugas/{user}/sandi', [AdminAccountController::class, 'resetPetugasPassword'])->middleware(['role:admin', 'throttle:10,1'])->name('admin.petugas.password');
     Route::post('/admin/ppdb/online/{pendaftaran}/akun/sandi', [AdminAccountController::class, 'resetPpdbPassword'])->middleware(['role:admin', 'throttle:10,1'])->name('admin.ppdb.online.password');
 });

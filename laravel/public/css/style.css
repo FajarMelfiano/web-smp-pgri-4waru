@@ -3672,13 +3672,12 @@ section[id] {
     width: 100%;
     min-width: 0;
   }
+}
 
-  /* Tombol pemformatan berita: 34px terlalu kecil untuk jari. */
-  .blogger-tool-btn,
-  .blogger-mode-btn {
-    min-width: 40px;
-    height: 40px;
-  }
+/* <img> dengan src kosong = kotak gambar rusak. Dipakai sebagai tempat
+   pratinjau yang diisi lewat JS, jadi disembunyikan sampai punya sumber. */
+img[src=""] {
+  visibility: hidden;
 }
 
 /* ---------- Berita, Galeri Foto & Ulasan Alumni Publik ---------- */
@@ -4087,6 +4086,9 @@ section[id] {
 /* ---------- Studio Editor Berita Bergaya Blogger ---------- */
 
 .blogger-studio {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
   margin-bottom: 2.25rem;
   border: 1px solid var(--line);
   border-radius: var(--r-lg);
@@ -4136,21 +4138,6 @@ section[id] {
 .blogger-title-wrap {
   flex: 1 1 auto;
   min-width: 0;
-}
-
-.blogger-title-meta {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.2rem;
-}
-
-.blogger-title-meta span {
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--red);
 }
 
 .blogger-title-input {
@@ -4377,19 +4364,33 @@ section[id] {
 /* Ruang Kerja Kertas & Panel Setelan Kanan */
 .blogger-workspace {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 330px;
-  min-height: 580px;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  flex: 1 1 auto;
+  min-height: 440px;
   background: var(--tint);
 }
 
+/* Form pembungkus harus jadi kolom flex, kalau tidak tingginya ikut isi
+   terpanjang dan studio cuma memotong (clip) sisa kanvas. */
+.blogger-studio > form {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
 .blogger-desk {
+  display: flex;
   padding: clamp(1.1rem, 2.5vw, 2rem);
   overflow-y: auto;
 }
 
 .blogger-paper {
-  max-width: 780px;
-  min-height: 520px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 760px;
+  min-height: 300px;
   margin-inline: auto;
   padding: clamp(1.5rem, 3.5vw, 2.75rem);
   border: 1px solid var(--line);
@@ -4399,7 +4400,8 @@ section[id] {
 }
 
 .blogger-visual-editor {
-  min-height: 430px;
+  flex: 1 1 auto;
+  min-height: 280px;
   outline: none;
   color: var(--ink);
   font-size: 1rem;
@@ -4499,10 +4501,8 @@ section[id] {
 }
 
 .blogger-sidebar__head h3 {
-  font-size: 0.84rem;
+  font-size: 0.95rem;
   font-weight: 800;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
   color: var(--ink);
 }
 
@@ -7573,75 +7573,88 @@ body.has-lightbox {
   line-height: 1.6;
 }
 
-/* Reset sandi oleh admin: <details> per baris akun supaya formulir tidak
-   memenuhi tabel dan tetap bisa dibuka dengan keyboard. */
-.adm-row-actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  gap: 0.5rem;
+/* Di layar lebar editor dipatok setinggi layar: tanpa ini kolom setelan yang
+   panjang (gambar sampul, dsb.) menarik kanvas jadi kosong memanjang ke bawah. */
+@media (min-width: 921px) {
+  .blogger-studio {
+    /* 520px = batas bawah supaya kanvas tidak jadi celah sempit di layar
+       pendek; sisanya mengikuti tinggi layar. */
+    height: clamp(520px, calc(100dvh - 274px), 880px);
+  }
+
+  .blogger-workspace {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  /* Kertas tumbuh mengikuti isi, bukan dipaku setinggi meja. Kalau dipaku,
+     tulisan yang lebih panjang melimpah keluar kertas dan tampak mengambang
+     di atas latar abu-abu. */
+  .blogger-desk {
+    align-items: flex-start;
+  }
+
+  .blogger-paper {
+    min-height: 100%;
+  }
+
+  .blogger-sidebar {
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-bottom: 0.5rem;
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+  }
+
+  /* Baris setelan yang terpotong di tepi bawah dibaca sebagai "salah render",
+     jadi tepinya diberi gradasi yang ikut tergulir. */
+  .blogger-sidebar::after {
+    content: "";
+    position: sticky;
+    bottom: 0;
+    display: block;
+    flex: 0 0 auto; /* induknya flex column; tanpa ini tingginya menyusut jadi 0 */
+    height: 2rem;
+    margin-top: -2rem;
+    background: linear-gradient(to bottom, transparent 35%, var(--surface));
+    pointer-events: none;
+  }
 }
 
-.adm-reset {
-  border: 1px solid var(--line);
-  border-radius: var(--r-md);
-  background: var(--surface);
+/* ---------- Editor berita: target sentuh di layar kecil ---------- */
+
+/* Harus berada setelah aturan dasar .blogger-* di atas, supaya menang. */
+@media (max-width: 920px) {
+  .blogger-tool-btn,
+  .blogger-mode-btn {
+    min-width: 44px;
+    height: 44px;
+  }
+
+  .blogger-format-select,
+  .blogger-title-input {
+    min-height: 44px;
+  }
+
+  /* Tiga tombol mode berdesakan di 390px: label terlipat tidak rata.
+     Dibuat tiga kolom sama lebar supaya tinggi dan lebarnya sejajar. */
+  .blogger-mode-switch {
+    width: 100%;
+    align-items: stretch;
+  }
+
+  .blogger-mode-btn {
+    flex: 1 1 0;
+    justify-content: center;
+    text-align: center;
+    white-space: normal;
+    line-height: 1.2;
+  }
 }
 
-.adm-reset[open] {
-  border-color: var(--ink-3);
-}
-
-.adm-reset > summary {
-  padding: 0.45rem 0.9rem;
-  font-size: 0.82rem;
-  font-weight: 700;
-  color: var(--ink-2);
-  cursor: pointer;
-  list-style: none;
-}
-
-.adm-reset > summary::-webkit-details-marker {
-  display: none;
-}
-
-.adm-reset > summary::after {
-  content: "";
-  display: inline-block;
-  width: 7px;
-  height: 7px;
-  margin-left: 0.5rem;
-  border-right: 2px solid currentColor;
-  border-bottom: 2px solid currentColor;
-  transform: rotate(45deg) translateY(-2px);
-}
-
-.adm-reset[open] > summary::after {
-  transform: rotate(-135deg) translateY(-2px);
-}
-
-.adm-reset > summary:hover {
-  color: var(--ink);
-  background: var(--tint);
-  border-radius: var(--r-md);
-}
-
-.adm-reset__body {
-  display: grid;
-  gap: 0.5rem;
-  min-width: 15rem;
-  padding: 0.85rem 0.9rem 0.95rem;
-  border-top: 1px solid var(--line);
-}
-
-.adm-reset__hint {
-  margin: 0;
-  color: var(--ink-3);
-  font-size: 0.75rem;
-  line-height: 1.5;
-}
-
-.adm-reset__body .btn {
-  justify-content: center;
-  min-height: 42px;
+/* Formulir di dalam panel penuh: dibatasi lebarnya supaya baris input tidak
+   melar selebar layar dan tetap nyaman dipindai. */
+.adm-narrow-form {
+  max-width: 44rem;
 }

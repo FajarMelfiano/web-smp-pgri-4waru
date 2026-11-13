@@ -22,6 +22,22 @@ class AdminAccountController extends Controller
     }
 
     /**
+     * Form penetapan kata sandi baru untuk akun petugas lain. Dipisah dari
+     * daftar akun supaya formulirnya lega. Akun sendiri diarahkan ke halaman
+     * Akun & Kata Sandi, karena di sana sandi lama wajib diketik lebih dulu.
+     */
+    public function editPetugasPassword(Request $request, User $user): View|RedirectResponse
+    {
+        if ($request->user('web')?->id === $user->id) {
+            return redirect()->route('admin.account');
+        }
+
+        return view('pages.admin.petugas-sandi', [
+            'petugas' => $user,
+        ]);
+    }
+
+    /**
      * Ganti kata sandi akun yang sedang masuk. Sandi lama wajib benar supaya
      * sesi yang dibajak tidak bisa memindahkan akun ke penyerang.
      */

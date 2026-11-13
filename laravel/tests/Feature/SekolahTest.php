@@ -120,7 +120,7 @@ class SekolahTest extends TestCase
         // Operator bisa membuka semua sub-halaman admin
         $this->actingAs($operator)->get('/admin')->assertOk()->assertSee('Akses Cepat Modul');
         $this->actingAs($operator)->get('/admin/ppdb')->assertOk()->assertSee('Siti Aminah');
-        $this->actingAs($operator)->get('/admin/berita')->assertOk()->assertSee('Studio Berita & Pengumuman');
+        $this->actingAs($operator)->get('/admin/berita')->assertOk()->assertSee('Berita & Pengumuman');
         $this->actingAs($operator)->get('/admin/akademik')->assertOk()->assertSee('Struktur Mata Pelajaran SMP');
         $this->actingAs($operator)->get('/admin/petugas')->assertOk()->assertSee('Daftar Akun Terdaftar');
         $this->actingAs($operator)->get('/admin/pengaturan')->assertOk()->assertSee('Kustomisasi Penuh Situs');
@@ -211,7 +211,7 @@ class SekolahTest extends TestCase
                 'name' => 'Operator Dua',
                 'email' => 'op2@smppgri4waru.sch.id',
                 'role' => 'operator',
-                'password' => 'rahasia123',
+                'password' => 'Rahasia123',
             ])
             ->assertRedirect('/admin/petugas');
 
@@ -302,11 +302,11 @@ class SekolahTest extends TestCase
             ->assertSee('<blockquote>Belajar aktif dan kolaboratif setiap hari.</blockquote>', false)
             ->assertDontSee('<script>alert(1)</script>', false);
 
-        // Mode sunting di Studio Berita menampilkan artikel yang dipilih
+        // Mode sunting menampilkan artikel yang dipilih
         $this->actingAs($admin)
             ->get('/admin/berita?edit='.$post->id)
             ->assertOk()
-            ->assertSee('Mode Sunting Entri')
+            ->assertSee('Perbarui Artikel')
             ->assertSee('Liputan Praktikum Informatika Siswa');
     }
 }

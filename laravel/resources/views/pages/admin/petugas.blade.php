@@ -26,132 +26,115 @@
     </div>
   @endif
 
-  <div class="adm-grid-2">
-    <section class="adm-panel" aria-labelledby="daftar-petugas-heading">
-      <div class="adm-panel__head">
-        <div class="adm-panel__title">
-          <h2 id="daftar-petugas-heading">Daftar Akun Terdaftar</h2>
-          <span class="adm-panel__badge">{{ $users->count() }} akun</span>
-        </div>
+  <section class="adm-panel" aria-labelledby="daftar-petugas-heading">
+    <div class="adm-panel__head">
+      <div class="adm-panel__title">
+        <h2 id="daftar-petugas-heading">Daftar Akun Terdaftar</h2>
+        <span class="adm-panel__badge">{{ $users->count() }} akun</span>
       </div>
+    </div>
 
-      <div class="adm-table-wrap">
-        <table class="adm-table">
-          <thead>
+    <div class="adm-table-wrap">
+      <table class="adm-table">
+        <thead>
+          <tr>
+            <th scope="col">Nama Petugas</th>
+            <th scope="col">Email Masuk</th>
+            <th scope="col">Peran</th>
+            <th scope="col">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach($users as $user)
             <tr>
-              <th scope="col">Nama Petugas</th>
-              <th scope="col">Email Masuk</th>
-              <th scope="col">Peran</th>
-              <th scope="col">Aksi</th>
+              <td>
+                <span class="adm-cell-primary">{{ $user->name }}</span>
+                @if(auth()->id() === $user->id)
+                  <span class="adm-cell-sub">Sesi Anda saat ini</span>
+                @endif
+              </td>
+              <td>{{ $user->email }}</td>
+              <td>
+                <span class="adm-role-badge">{{ $user->role }}</span>
+              </td>
+              <td>
+                @if(auth()->user()?->role === 'admin' && auth()->id() !== $user->id)
+                  <div class="adm-row-actions">
+                    <a class="btn btn--ghost btn--sm" href="{{ route('admin.petugas.password.edit', $user) }}">
+                      <svg class="i" aria-hidden="true"><use href="#i-lock"/></svg>
+                      <span>Ganti sandi</span>
+                    </a>
+                    <form method="POST" action="{{ route('admin.petugas.destroy', $user) }}" class="adm-inline-form">
+                      @csrf
+                      @method('DELETE')
+                      <button type="submit" class="btn btn--quiet btn--sm adm-btn-danger">Hapus Akun</button>
+                    </form>
+                  </div>
+                @elseif(auth()->id() === $user->id)
+                  <a class="btn btn--ghost btn--sm" href="{{ route('admin.account') }}">Ganti sandi saya</a>
+                @else
+                  <span class="adm-cell-sub">Terlindungi</span>
+                @endif
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            @foreach($users as $user)
-              <tr>
-                <td>
-                  <span class="adm-cell-primary">{{ $user->name }}</span>
-                  @if(auth()->id() === $user->id)
-                    <span class="adm-cell-sub">Sesi Anda saat ini</span>
-                  @endif
-                </td>
-                <td>{{ $user->email }}</td>
-                <td>
-                  <span class="adm-role-badge">{{ $user->role }}</span>
-                </td>
-                <td>
-                  @if(auth()->user()?->role === 'admin' && auth()->id() !== $user->id)
-                    <div class="adm-row-actions">
-                      <details class="adm-reset" @if((string) old('_reset_target') === (string) $user->id) open @endif>
-                        <summary>Ganti sandi</summary>
-                        <form method="POST" action="{{ route('admin.petugas.password', $user) }}" class="adm-reset__body" novalidate>
-                          @csrf
-                          <input type="hidden" name="_reset_target" value="{{ $user->id }}">
-                          <p class="adm-reset__hint">Sandi baru untuk {{ $user->name }}. Beri tahu yang bersangkutan setelah disimpan.</p>
-                          <div class="pw-wrap">
-                            <input name="new_password" type="password" autocomplete="new-password" placeholder="Sandi baru" aria-label="Kata sandi baru untuk {{ $user->name }}" required>
-                            <button type="button" class="pw-toggle" data-pw-toggle aria-pressed="false" aria-label="Tampilkan kata sandi baru">
-                              <svg class="i" aria-hidden="true"><use href="#i-eye"/></svg>
-                            </button>
-                          </div>
-                          <div class="pw-wrap">
-                            <input name="new_password_confirmation" type="password" autocomplete="new-password" placeholder="Ulangi sandi baru" aria-label="Ulangi kata sandi baru untuk {{ $user->name }}" required>
-                          </div>
-                          <button type="submit" class="btn btn--primary btn--sm">Simpan sandi</button>
-                        </form>
-                      </details>
+          @endforeach
+        </tbody>
+      </table>
+    </div>
+  </section>
 
-                      <form method="POST" action="{{ route('admin.petugas.destroy', $user) }}" class="adm-inline-form">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn--quiet btn--sm adm-btn-danger">Hapus Akun</button>
-                      </form>
-                    </div>
-                  @elseif(auth()->id() === $user->id)
-                    <a class="btn btn--ghost btn--sm" href="{{ route('admin.account') }}">Ganti sandi saya</a>
-                  @else
-                    <span class="adm-cell-sub">Terlindungi</span>
-                  @endif
-                </td>
-              </tr>
-            @endforeach
-          </tbody>
-        </table>
+  <section class="adm-panel" aria-labelledby="tambah-petugas-heading">
+    <div class="adm-panel__head">
+      <div class="adm-panel__title">
+        <h2 id="tambah-petugas-heading">Tambah Petugas Baru</h2>
       </div>
-    </section>
+    </div>
 
-    <section class="adm-panel" aria-labelledby="tambah-petugas-heading">
-      <div class="adm-panel__head">
-        <div class="adm-panel__title">
-          <h2 id="tambah-petugas-heading">Tambah Petugas Baru</h2>
+    @if(auth()->user()?->role === 'admin')
+      <form method="POST" action="{{ route('admin.petugas.store') }}" class="adm-panel__body adm-narrow-form">
+        @csrf
+        <div class="field @error('name') has-error @enderror">
+          <label for="petugas-nama">Nama lengkap petugas</label>
+          <input id="petugas-nama" name="name" type="text" value="{{ old('name') }}" placeholder="Contoh: Staf Tata Usaha" required>
+          @error('name')
+            <span class="error">{{ $message }}</span>
+          @enderror
         </div>
-      </div>
 
-      @if(auth()->user()?->role === 'admin')
-        <form method="POST" action="{{ route('admin.petugas.store') }}" class="adm-panel__body">
-          @csrf
-          <div class="field @error('name') has-error @enderror">
-            <label for="petugas-nama">Nama lengkap petugas</label>
-            <input id="petugas-nama" name="name" type="text" value="{{ old('name') }}" placeholder="Contoh: Staf Tata Usaha" required>
-            @error('name')
+        <div class="field @error('email') has-error @enderror">
+          <label for="petugas-email">Alamat email login</label>
+          <input id="petugas-email" name="email" type="email" value="{{ old('email') }}" placeholder="nama@smppgri4waru.sch.id" required>
+          @error('email')
+            <span class="error">{{ $message }}</span>
+          @enderror
+        </div>
+
+        <div class="adm-form-grid-2">
+          <div class="field @error('role') has-error @enderror">
+            <label for="petugas-role">Peran akses</label>
+            <select id="petugas-role" name="role">
+              <option value="operator" @selected(old('role') === 'operator')>Operator (Verifikasi &amp; Berita)</option>
+              <option value="admin" @selected(old('role') === 'admin')>Administrator Penuh</option>
+            </select>
+          </div>
+
+          <div class="field @error('password') has-error @enderror">
+            <label for="petugas-password">Kata sandi awal (8 - 16 karakter)</label>
+            <input id="petugas-password" name="password" type="password" placeholder="Huruf besar, huruf kecil, dan angka" autocomplete="new-password" required>
+            @error('password')
               <span class="error">{{ $message }}</span>
             @enderror
           </div>
-
-          <div class="field @error('email') has-error @enderror">
-            <label for="petugas-email">Alamat email login</label>
-            <input id="petugas-email" name="email" type="email" value="{{ old('email') }}" placeholder="nama@smppgri4waru.sch.id" required>
-            @error('email')
-              <span class="error">{{ $message }}</span>
-            @enderror
-          </div>
-
-          <div class="adm-form-grid-2">
-            <div class="field @error('role') has-error @enderror">
-              <label for="petugas-role">Peran akses</label>
-              <select id="petugas-role" name="role">
-                <option value="operator" @selected(old('role') === 'operator')>Operator (Verifikasi &amp; Berita)</option>
-                <option value="admin" @selected(old('role') === 'admin')>Administrator Penuh</option>
-              </select>
-            </div>
-
-            <div class="field @error('password') has-error @enderror">
-              <label for="petugas-password">Kata sandi awal (8 - 16 karakter)</label>
-              <input id="petugas-password" name="password" type="password" placeholder="Huruf besar, huruf kecil, dan angka" autocomplete="new-password" required>
-              @error('password')
-                <span class="error">{{ $message }}</span>
-              @enderror
-            </div>
-          </div>
-
-          <div class="form-actions">
-            <button type="submit" class="btn btn--primary">Tambahkan Petugas</button>
-          </div>
-        </form>
-      @else
-        <div class="adm-panel__body">
-          <p style="color:var(--ink-3);font-size:0.9rem">Hanya pengguna dengan peran <b>Admin</b> yang dapat menambahkan atau menghapus akun petugas.</p>
         </div>
-      @endif
-    </section>
-  </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn--primary">Tambahkan Petugas</button>
+        </div>
+      </form>
+    @else
+      <div class="adm-panel__body">
+        <p style="color:var(--ink-3);font-size:0.9rem">Hanya pengguna dengan peran <b>Admin</b> yang dapat menambahkan atau menghapus akun petugas.</p>
+      </div>
+    @endif
+  </section>
 @endsection

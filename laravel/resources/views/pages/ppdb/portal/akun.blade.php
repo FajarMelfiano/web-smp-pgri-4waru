@@ -8,7 +8,6 @@
   <section class="adm-panel" aria-labelledby="akun-ppdb-heading">
     <div class="adm-panel__head">
       <div>
-        <span class="eyebrow">Keamanan Akun</span>
         <h1 class="adm-panel__title" id="akun-ppdb-heading">Akun &amp; Kata Sandi</h1>
         <p class="adm-panel__sub">Ganti kata sandi portal PPDB Anda sendiri. Sandi lama diminta supaya akun tetap aman kalau perangkat tertinggal dalam keadaan masuk.</p>
       </div>
