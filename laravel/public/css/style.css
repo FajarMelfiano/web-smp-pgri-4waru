@@ -25,6 +25,10 @@
   --red-soft-2: rgba(18, 110, 166, 0.18);
   --ring: rgba(18, 110, 166, 0.18);
   --dot: rgba(24, 24, 27, 0.12);
+  /* Tekstur latar halaman: jauh lebih tipis dari --dot milik .deco__dots.
+     Satu pitch dipakai bersama oleh halaman, panel admin, dan kanvas editor. */
+  --dot-soft: rgba(24, 24, 27, 0.075);
+  --dot-pitch: 26px;
 
   --ink: #18181b;
   --ink-2: #3f3f46;
@@ -72,6 +76,7 @@
   --red-soft-2: rgba(91, 180, 229, 0.26);
   --ring: rgba(91, 180, 229, 0.24);
   --dot: rgba(244, 244, 245, 0.14);
+  --dot-soft: rgba(244, 244, 245, 0.085);
 
   --ink: #f4f4f5;
   --ink-2: #cfcfd6;
@@ -4383,6 +4388,11 @@ img[src=""] {
   display: flex;
   padding: clamp(1.1rem, 2.5vw, 2rem);
   overflow-y: auto;
+  /* Kanvas memakai grid titik yang sama dengan latar halaman. */
+  background-image: radial-gradient(var(--dot-soft) 1px, transparent 1px);
+  background-size: var(--dot-pitch) var(--dot-pitch);
+  background-position: 0 0;
+  background-attachment: local;
 }
 
 .blogger-paper {
@@ -7619,6 +7629,31 @@ body.has-lightbox {
     margin-top: -2rem;
     background: linear-gradient(to bottom, transparent 35%, var(--surface));
     pointer-events: none;
+  }
+}
+
+/* ---------- Tekstur latar halaman ---------- */
+
+/* Titik halus yang sama dengan .deco__dots di Beranda. Fungsinya menandai
+   permukaan halaman supaya area besar tidak terbaca rata dan kosong; panel,
+   kartu, dan kertas tetap opak, jadi tidak ada teks yang duduk di atas pola. */
+body,
+.section--tint,
+.section--white,
+.adm-shell {
+  background-image: radial-gradient(var(--dot-soft) 1px, transparent 1px);
+  background-size: var(--dot-pitch) var(--dot-pitch);
+  background-position: 0 0;
+}
+
+/* Tekstur tidak ikut tercetak (aturan di atas lebih akhir, jadi aturan
+   `background: #fff` pada @media print di bawahnya tidak cukup). */
+@media print {
+  body,
+  .section--tint,
+  .section--white,
+  .adm-shell {
+    background-image: none;
   }
 }
 
