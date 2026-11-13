@@ -1,0 +1,16 @@
+User-agent: *
+Allow: /
+
+# Area admin dan autentikasi (jangan di-index)
+Disallow: /admin
+Disallow: /login
+Disallow: /logout
+Disallow: /ppdb/portal
+Disallow: /ppdb/keluar
+Disallow: /ppdb/masuk
+Disallow: /ppdb/lupa-sandi
+Disallow: /ppdb/reset-sandi/
+Disallow: /admin/lupa-sandi
+Disallow: /admin/reset-sandi/
+
+Sitemap: https://smppgri4waru.sch.id/sitemap.xml

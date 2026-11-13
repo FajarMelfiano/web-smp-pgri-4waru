@@ -1,4 +1,16 @@
 User-agent: *
-Disallow: /login, /logout, /admin, /admin/*, /storage/*, /.git, /phpunit.xml, /vendor/, /.env, /.local, /.cache, /.npmrc, /.gemini, /.pi, /.tapes, /.kilo, /.opencode, /.claude, /.codex, /Downloads, /node_modules, /.local/share/kilo, /.local/share/glyph, /.local/share/nvim, /.local/share/mise, /.local/share/omarchy, /.local/share/wrangler, /.local/share/pnpm, /.local/share/uv, /.local/share/gh, /.local/share/psysh, /.local/share/yaml-lint, /.local/share/sharp, /.local/share/http-devin, /.local/share/ora, /.local/share/kitten, /.local/share/tmp
+Allow: /
 
-Allow: /, /index.html, /favicon.ico, /robots.txt, /public/, /public/css/app.css, /public/favicon.svg, /public/images/*.jpg, /public/images/*.svg, /public/images/*.woff2, /public/index.php, /public/js/app.js, /public/robots.txt, /htaccess
+# Area admin dan autentikasi (jangan di-index)
+Disallow: /admin
+Disallow: /login
+Disallow: /logout
+Disallow: /ppdb/portal
+Disallow: /ppdb/keluar
+Disallow: /ppdb/masuk
+Disallow: /ppdb/lupa-sandi
+Disallow: /ppdb/reset-sandi/
+Disallow: /admin/lupa-sandi
+Disallow: /admin/reset-sandi/
+
+Sitemap: https://smppgri4waru.sch.id/sitemap.xml

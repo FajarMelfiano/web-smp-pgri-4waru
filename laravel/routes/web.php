@@ -28,6 +28,16 @@ Route::get('/storage/{path}', function (string $path) {
     ]);
 })->where('path', '.*')->name('storage.local.fallback');
 
+Route::get('/robots.txt', function () {
+    $path = public_path('robots.txt');
+
+    if (! is_file($path)) {
+        abort(404);
+    }
+
+    return response(file_get_contents($path), 200, ['Content-Type' => 'text/plain; charset=UTF-8']);
+})->name('robots');
+
 Route::get('/', function () {
     $beritaTerbaru = Schema::hasTable('posts')
         ? Post::query()->where('status', 'terbit')->latest('published_at')->latest('id')->limit(3)->get()
@@ -114,25 +124,58 @@ Route::get('/alumni', [AlumniController::class, 'index'])->name('alumni.index');
 Route::post('/alumni', [AlumniController::class, 'store'])->middleware('throttle:5,1')->name('alumni.store');
 
 Route::get('/sitemap.xml', function () {
-    $urls = [
-        route('beranda'),
-        route('profil'),
-        route('akademik'),
-        route('ppdb'),
-        route('ppdb.daftar'),
-        route('ppdb.masuk'),
-        route('kontak'),
-        route('berita.index'),
-        route('alumni.index'),
+    // Halaman statis publik: loc + changefreq + priority.
+    $pages = [
+        route('beranda')      => ['weekly', '1.0'],
+        route('profil')       => ['monthly', '0.8'],
+        route('akademik')     => ['monthly', '0.8'],
+        route('ppdb')         => ['weekly', '0.9'],
+        route('berita.index') => ['daily', '0.8'],
+        route('kontak')       => ['monthly', '0.7'],
+        route('alumni.index') => ['monthly', '0.7'],
     ];
 
-    foreach (Post::query()->where('status', 'terbit')->pluck('slug') as $slug) {
-        $urls[] = route('berita.show', $slug);
+    $urls = [];
+    foreach ($pages as $loc => [$changefreq, $priority]) {
+        $urls[] = [
+            'loc' => $loc,
+            'changefreq' => $changefreq,
+            'priority' => $priority,
+        ];
     }
 
-    $xml = '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+    // Halaman pendaftaran PPdB musiman (indexable, prioritas lebih rendah).
+    $urls[] = [
+        'loc' => route('ppdb.daftar'),
+        'changefreq' => 'monthly',
+        'priority' => '0.6',
+    ];
+
+    // Halaman berita yang terbit; lastmod dari updated_at / published_at.
+    $posts = Post::query()
+        ->where('status', 'terbit')
+        ->get(['slug', 'published_at', 'updated_at']);
+
+    foreach ($posts as $post) {
+        $urls[] = [
+            'loc' => route('berita.show', $post->slug),
+            'lastmod' => ($post->updated_at ?? $post->published_at)?->toAtomString() ?? now()->toAtomString(),
+            'changefreq' => 'weekly',
+            'priority' => '0.7',
+        ];
+    }
+
+    $xml = '<?xml version="1.0" encoding="UTF-8"?>'."\n";
+    $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."\n";
     foreach ($urls as $url) {
-        $xml .= '<url><loc>'.e($url).'</loc></url>';
+        $xml .= '  <url>'."\n";
+        $xml .= '    <loc>'.e($url['loc']).'</loc>'."\n";
+        if (isset($url['lastmod'])) {
+            $xml .= '    <lastmod>'.e($url['lastmod']).'</lastmod>'."\n";
+        }
+        $xml .= '    <changefreq>'.e($url['changefreq']).'</changefreq>'."\n";
+        $xml .= '    <priority>'.e($url['priority']).'</priority>'."\n";
+        $xml .= '  </url>'."\n";
     }
     $xml .= '</urlset>';
 
