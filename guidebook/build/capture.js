@@ -92,9 +92,24 @@ async function clear(page) {
 async function shot(page, name, opts = {}) {
   if (want && !want.has(name)) return;
   await page.waitForTimeout(opts.wait ?? 450);
-  await annotate(page, opts.marks, opts.masks);
+  const boxes = await annotate(page, opts.marks, opts.masks);
+  const scroll = await page.evaluate(() => ({ x: window.scrollX, y: window.scrollY }));
   await page.screenshot({ path: `${OUT}/${name}.png`, fullPage: !!opts.full });
   await clear(page);
+  fs.writeFileSync(
+    `${OUT}/${name}.json`,
+    JSON.stringify(
+      {
+        name,
+        vp: page.viewportSize(),
+        full: !!opts.full,
+        scroll,
+        boxes: boxes.map((b) => ({ n: b.n, x: b.x + scroll.x, y: b.y + scroll.y, width: b.width, height: b.height })),
+      },
+      null,
+      1
+    )
+  );
   console.log("shot", name);
 }
 
@@ -124,21 +139,18 @@ async function shot(page, name, opts = {}) {
     if (name === "pub-daftar") {
       await page.evaluate(() => window.scrollTo(0, 260));
       opts.marks = [
-        { text: "Nama Lengkap", n: 1, at: "left" },
-        { text: "Email", n: 2, at: "left" },
-        { text: "Kata Sandi", n: 3, at: "left" },
+        { text: "Email Calon Siswa", n: 1, at: "left" },
+        { text: "Kata Sandi", n: 2, at: "left" },
+        { text: "Ulangi Kata Sandi", n: 3, at: "left" },
       ];
     }
     if (name === "pub-daftar-identitas") {
       await page.evaluate(() => window.scrollTo(0, 900));
-      opts.marks = [
-        { text: "NIK", n: 1, at: "left" },
-        { text: "Nomor WhatsApp", n: 2, at: "left" },
-      ];
+      opts.marks = [];
     }
     if (name === "pub-masuk") {
       opts.marks = [
-        { text: "Email atau NIK", n: 1, at: "left" },
+        { text: "Email atau 16 Digit NIK", n: 1, at: "left" },
         { text: "Kata Sandi", n: 2, at: "left" },
         { text: "Lupa kata sandi", n: 3, at: "right" },
       ];
@@ -198,19 +210,26 @@ async function shot(page, name, opts = {}) {
   await page.goto(BASE + "/admin/ppdb", { waitUntil: "domcontentloaded" });
   await shot(page, "adm-ppdb-list", {
     marks: [
-      { text: "Cari nama siswa", n: 1, at: "left" },
-      { text: "Semua status", n: 2, at: "left" },
-      { text: "Saring Data", n: 3, at: "right" },
+      { sel: "#cari-online", n: 1, at: "left" },
+      { text: "Saring Data", n: 2, at: "right" },
+      { text: "Unduh CSV Online", n: 3, at: "right" },
     ],
-    masks: [{ text: "Fajar Melfiano" }, { text: "Raka Pratama Putra" }],
   });
   await page.goto(BASE + "/admin/ppdb?status=diterima", { waitUntil: "domcontentloaded" });
   await shot(page, "adm-ppdb-saring", {
-    masks: [{ text: "Fajar Melfiano" }, { text: "Raka Pratama Putra" }],
   });
 
-  // jalur + ekspor (tab lain pada halaman yang sama)
-  await shot(page, "adm-ppdb-tab", {});
+  // tab lain pada modul PPDB
+  await page.goto(BASE + "/admin/ppdb?tab=jalur", { waitUntil: "domcontentloaded" });
+  await shot(page, "adm-ppdb-jalur", {
+    marks: [
+      { text: "Jalur & Gelombang PPDB", n: 1, at: "top" },
+      { text: "Tambah Jalur", n: 2, at: "right" },
+    ],
+  });
+  await page.goto(BASE + "/admin/ppdb?tab=pesan", { waitUntil: "domcontentloaded" });
+  await shot(page, "adm-ppdb-pesan", {
+  });
 
   // detail pendaftar demo
   for (const [id, tag] of [[DEMO, "diterima"], [PAYPEND, "bayar"]]) {
@@ -227,7 +246,7 @@ async function shot(page, name, opts = {}) {
     await page.evaluate(() => window.scrollTo(0, 1100));
     await shot(page, `adm-detail-${tag}-bayar`, {
       marks: [
-        { text: "Buka Bukti Transfer", n: 1, at: "right" },
+        { sel: 'a[href*="/bukti"]', n: 1, at: "right" },
         { text: "Status Pembayaran", n: 2, at: "left" },
         { text: "Perbarui Status Pembayaran", n: 3, at: "right" },
       ],
@@ -239,8 +258,8 @@ async function shot(page, name, opts = {}) {
     });
     await shot(page, `adm-detail-${tag}-berkas`, {
       marks: [
-        { text: "Valid / Sesuai", n: 1, at: "left" },
-        { text: "Simpan", n: 2, at: "right" },
+        { sel: '.adm-inline-form select', n: 1, at: "left" },
+        { text: "Simpan", n: 3, at: "right" },
       ],
     });
     await page.evaluate(() => {
@@ -331,12 +350,12 @@ async function shot(page, name, opts = {}) {
   await page.goto(BASE + "/ppdb/portal", { waitUntil: "domcontentloaded" });
   await shot(page, "por-beranda-tahap", {
     marks: [
-      { text: "Pendaftaran Jalur", n: 1, at: "left" },
-      { text: "Pembayaran", n: 2, at: "left" },
-      { text: "Data Diri", n: 3, at: "left" },
-      { text: "Berkas", n: 4, at: "left" },
-      { text: "Kuesioner", n: 5, at: "left" },
-      { text: "Kartu Peserta", n: 6, at: "left" },
+      { sel: ".ppdb-flow-card:nth-child(1) .ppdb-flow-card__num", n: 1, at: "left" },
+      { sel: ".ppdb-flow-card:nth-child(2) .ppdb-flow-card__num", n: 2, at: "left" },
+      { sel: ".ppdb-flow-card:nth-child(3) .ppdb-flow-card__num", n: 3, at: "left" },
+      { sel: ".ppdb-flow-card:nth-child(4) .ppdb-flow-card__num", n: 4, at: "left" },
+      { sel: ".ppdb-flow-card:nth-child(5) .ppdb-flow-card__num", n: 5, at: "left" },
+      { sel: ".ppdb-flow-card:nth-child(6) .ppdb-flow-card__num", n: 6, at: "left" },
     ],
   });
 
@@ -368,7 +387,7 @@ async function shot(page, name, opts = {}) {
     ["mob-berita", "/berita"],
   ]) {
     await mp.goto(BASE + url, { waitUntil: "domcontentloaded" });
-    await shot(mp, name, { full: true });
+    await shot(mp, name, {});
   }
   await mp.goto(BASE + "/ppdb/masuk");
   await mp.fill('input[name="identifier"]', STU.id);
@@ -379,7 +398,7 @@ async function shot(page, name, opts = {}) {
     ["mob-portal-berkas", "/ppdb/portal/berkas"],
   ]) {
     await mp.goto(BASE + url, { waitUntil: "domcontentloaded" });
-    await shot(mp, name, { full: true });
+    await shot(mp, name, {});
   }
 
   await b.close();

@@ -1,0 +1,613 @@
+/* ==========================================================================
+   Panduan Penggunaan Website SMP PGRI 4 Waru - tata letak cetak A4
+   Token warna/tipografi diambil dari produksi (laravel/public/css/style.css)
+   supaya buku terasa satu keluarga dengan websitenya.
+   Lembar: 216 x 303 mm (trim 210 x 297 mm + bleed 3 mm tiap sisi).
+   ========================================================================== */
+
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  src: url("fonts/plus-jakarta-sans-var.woff2") format("woff2");
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: block;
+}
+
+:root {
+  --accent: #0e5e8f;
+  --accent-2: #126ea6;
+  --accent-soft: rgba(18, 110, 166, 0.08);
+
+  --ink: #18181b;
+  --ink-2: #3f3f46;
+  --ink-3: #6b6b74;
+
+  --line: #e4e4e7;
+  --line-strong: #c7c7cd;
+  --tint: #f4f4f5;
+  --paper: #ffffff;
+
+  --warn: #a3341f;
+  --warn-soft: rgba(163, 52, 31, 0.07);
+
+  --dot-soft: rgba(24, 24, 27, 0.075);
+  --dot-pitch: 26px;
+
+  --bleed: 3mm;
+  --trim-w: 210mm;
+  --trim-h: 297mm;
+  --sheet-w: 216mm;
+  --sheet-h: 303mm;
+
+  --pad-top: 17mm;
+  --pad-bottom: 18mm;
+  --pad-inner: 21mm;
+  --pad-outer: 15mm;
+
+  --baseline: 4.6mm;
+  --radius: 2mm;
+}
+
+/* ---------- halaman ---------- */
+
+@page {
+  size: 216mm 303mm;
+  margin: 0;
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+body {
+  margin: 0;
+  background: #d9dbdf;
+  font-family: "Plus Jakarta Sans", "Helvetica Neue", Arial, sans-serif;
+  font-size: 10.4pt;
+  line-height: 1.55;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.gb-page {
+  position: relative;
+  width: var(--sheet-w);
+  height: var(--sheet-h);
+  margin: 0 auto 10mm;
+  padding: var(--bleed);
+  background: var(--paper);
+  overflow: hidden;
+  break-after: page;
+  page-break-after: always;
+}
+
+.gb-page:last-child { break-after: auto; page-break-after: auto; }
+
+/* tanda potong: 8 garis pendek di sudut area trim, berada di zona bleed */
+.marks { position: absolute; inset: 0; pointer-events: none; z-index: 5; }
+.marks i { position: absolute; background: #000; }
+.marks .v { width: .3mm; height: var(--bleed); }
+.marks .h { width: var(--bleed); height: .3mm; }
+.marks .tl-v { left: var(--bleed); top: 0; }
+.marks .tl-h { top: var(--bleed); left: 0; }
+.marks .tr-v { right: var(--bleed); top: 0; }
+.marks .tr-h { top: var(--bleed); right: 0; }
+.marks .bl-v { left: var(--bleed); bottom: 0; }
+.marks .bl-h { bottom: var(--bleed); left: 0; }
+.marks .br-v { right: var(--bleed); bottom: 0; }
+.marks .br-h { bottom: var(--bleed); right: 0; }
+@media screen { .marks i { background: #9ca0a8; } }
+
+/* area cetak (trim) */
+.gb-page > .trim {
+  position: relative;
+  width: var(--trim-w);
+  height: var(--trim-h);
+  padding: var(--pad-top) var(--pad-outer) var(--pad-bottom) var(--pad-inner);
+  display: flex;
+  flex-direction: column;
+}
+
+/* margin dalam/luar berselang-seling seperti buku jilid */
+.gb-page:nth-child(even) > .trim {
+  padding-left: var(--pad-outer);
+  padding-right: var(--pad-inner);
+}
+
+/* latar penuh (ikut ke area bleed) */
+.gb-page > .bg {
+  position: absolute;
+  inset: 0;
+  background: var(--paper);
+  z-index: 0;
+}
+
+.gb-page > .trim > * { position: relative; z-index: 1; }
+
+/* folio: "Bab 3 · 24" */
+.folio {
+  position: absolute;
+  bottom: calc(var(--pad-bottom) - 9mm);
+  font-size: 8.4pt;
+  color: var(--ink-3);
+  letter-spacing: 0.02em;
+}
+.gb-page:nth-child(odd) > .trim > .folio { right: var(--pad-outer); }
+.gb-page:nth-child(even) > .trim > .folio { left: var(--pad-outer); }
+.folio b { color: var(--ink-2); font-weight: 600; }
+.folio .sep { color: var(--line-strong); padding: 0 1.6mm; }
+
+/* ---------- tipografi ---------- */
+
+h1, h2, h3, h4, p, ul, ol, dl, figure, table { margin: 0; }
+
+.t-page {
+  font-size: 19pt;
+  font-weight: 600;
+  line-height: 1.16;
+  letter-spacing: -0.015em;
+  margin-bottom: 2.6mm;
+  padding-bottom: 2.6mm;
+  border-bottom: 1px solid var(--line);
+  max-width: 148mm;
+}
+
+.t-lede {
+  font-size: 10.8pt;
+  color: var(--ink-3);
+  line-height: 1.5;
+  max-width: 132mm;
+  margin-bottom: 5mm;
+}
+
+.t-h3 {
+  font-size: 10.4pt;
+  font-weight: 700;
+  letter-spacing: 0.005em;
+  margin: 5mm 0 2.2mm;
+}
+
+.t-sub {
+  font-size: 8.4pt;
+  color: var(--ink-3);
+  letter-spacing: 0.03em;
+  margin-bottom: 1.4mm;
+}
+
+p + p { margin-top: 2.4mm; }
+
+p, li { hyphens: none; orphans: 3; widows: 3; }
+
+strong, b { font-weight: 700; }
+
+/* label elemen antarmuka di dalam kalimat */
+.ui {
+  font-weight: 600;
+  background: var(--tint);
+  border: 1px solid var(--line);
+  border-radius: 1mm;
+  padding: 0.2mm 1.1mm;
+  white-space: nowrap;
+}
+
+.mono {
+  font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+  font-size: 9.8pt;
+  background: var(--tint);
+  padding: 0.3mm 1mm;
+  border-radius: 1mm;
+}
+
+/* ---------- langkah bernomor ---------- */
+
+ol.steps {
+  list-style: none;
+  counter-reset: step;
+  margin: 0 0 2mm;
+}
+
+ol.steps > li {
+  counter-increment: step;
+  position: relative;
+  padding-left: 8.4mm;
+  margin-bottom: 2.4mm;
+  min-height: 5.4mm;
+  line-height: 1.5;
+}
+
+ol.steps > li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 0.2mm;
+  width: 5.4mm;
+  height: 5.4mm;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-size: 8.4pt;
+  font-weight: 700;
+  line-height: 5.4mm;
+  text-align: center;
+}
+
+ol.steps > li:last-child { margin-bottom: 0; }
+
+/* ---------- gambar ---------- */
+
+.fig {
+  margin: 0 0 3mm;
+  break-inside: avoid;
+}
+
+.fig .frame {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--tint);
+  line-height: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.fig img {
+  display: block;
+  max-width: 100%;
+  max-height: 110mm;
+  width: auto;
+  height: auto;
+}
+
+.fig figcaption {
+  font-size: 8.6pt;
+  color: var(--ink-3);
+  margin-top: 1.6mm;
+  padding-left: 2.6mm;
+  border-left: 2px solid var(--accent);
+  line-height: 1.45;
+  max-width: 150mm;
+}
+
+/* ---------- callout ---------- */
+
+.callout {
+  background: var(--tint);
+  border-left: 2.4px solid var(--ink-2);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 3mm 4mm;
+  font-size: 10.2pt;
+  line-height: 1.5;
+  margin-top: 4mm;
+  break-inside: avoid;
+}
+
+.callout .label {
+  display: block;
+  font-size: 8pt;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--ink-2);
+  margin-bottom: 1mm;
+}
+
+.callout--warn {
+  background: var(--warn-soft);
+  border-left-color: var(--warn);
+}
+.callout--warn .label { color: var(--warn); }
+
+.callout--accent {
+  background: var(--accent-soft);
+  border-left-color: var(--accent);
+}
+.callout--accent .label { color: var(--accent); }
+
+/* ---------- tabel ---------- */
+
+.tb {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 10pt;
+  line-height: 1.45;
+  margin-bottom: 3mm;
+  break-inside: avoid;
+}
+
+.tb th {
+  text-align: left;
+  font-size: 8.6pt;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--ink-2);
+  padding: 2mm 2.4mm;
+  border-bottom: 1.4px solid var(--ink-2);
+  background: var(--tint);
+}
+
+.tb td {
+  padding: 2mm 2.4mm;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+
+.tb tr:last-child td { border-bottom: 1.2px solid var(--line-strong); }
+
+.tb--tight td, .tb--tight th { padding: 1.5mm 2mm; }
+
+/* tabel centang */
+.tb .box {
+  display: inline-block;
+  width: 3.4mm;
+  height: 3.4mm;
+  border: 1.2px solid var(--ink-2);
+  border-radius: 0.6mm;
+  vertical-align: -0.5mm;
+}
+
+/* ---------- daftar isi ---------- */
+
+.toc { columns: 2; column-gap: 12mm; font-size: 10pt; }
+
+.toc .grp {
+  break-inside: avoid;
+  margin-bottom: 4.6mm;
+}
+
+.toc .grp > .grp-title {
+  font-size: 8pt;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  padding-bottom: 1.2mm;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 1.4mm;
+}
+
+.toc .row {
+  display: flex;
+  align-items: baseline;
+  gap: 1.6mm;
+  line-height: 1.45;
+  padding: 0.5mm 0;
+}
+
+.toc .row .t { flex: 0 1 auto; }
+.toc .row .d {
+  flex: 1 1 auto;
+  border-bottom: 1px dotted var(--line-strong);
+  transform: translateY(-0.8mm);
+}
+.toc .row .p { flex: 0 0 auto; color: var(--ink-3); font-size: 8.6pt; }
+
+/* ---------- sampul ---------- */
+
+.p-cover > .trim { padding: 0; }
+
+.cover {
+  position: relative;
+  height: 100%;
+  padding: 22mm 20mm 18mm;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(var(--dot-soft) 1px, transparent 1px) 0 0 / var(--dot-pitch) var(--dot-pitch),
+    var(--paper);
+}
+
+.cover__mark {
+  display: flex;
+  align-items: center;
+  gap: 3.4mm;
+  font-size: 8.6pt;
+  letter-spacing: 0.06em;
+  color: var(--ink-3);
+  font-weight: 600;
+}
+
+.cover__mark .dot {
+  width: 2.2mm;
+  height: 2.2mm;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.cover__title {
+  margin-top: auto;
+  font-size: 40pt;
+  font-weight: 300;
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+  max-width: 150mm;
+}
+
+.cover__title em {
+  font-style: normal;
+  color: var(--accent);
+}
+
+.cover__sub {
+  margin-top: 6mm;
+  font-size: 12.4pt;
+  color: var(--ink-2);
+  max-width: 120mm;
+  line-height: 1.4;
+}
+
+.cover__meta {
+  margin-top: 12mm;
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  gap: 2mm 14mm;
+  justify-content: start;
+  font-size: 8.8pt;
+  color: var(--ink-3);
+  padding-top: 4mm;
+  border-top: 1px solid var(--line);
+}
+
+.cover__meta b { display: block; color: var(--ink); font-size: 9.6pt; font-weight: 600; }
+
+.cover__edge {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 8mm;
+  background: var(--accent);
+}
+
+/* ---------- pembuka bab ---------- */
+
+.p-opener > .trim { padding: 0; }
+
+.opener {
+  position: relative;
+  height: 100%;
+  background:
+    radial-gradient(rgba(255, 255, 255, 0.13) 1px, transparent 1px) 0 0 / var(--dot-pitch) var(--dot-pitch),
+    var(--accent);
+  color: #fff;
+  padding: 26mm 20mm 20mm;
+  display: flex;
+  flex-direction: column;
+}
+
+.opener__num {
+  font-size: 118pt;
+  font-weight: 200;
+  line-height: 0.84;
+  letter-spacing: -0.04em;
+  color: rgba(255, 255, 255, 0.32);
+}
+
+.opener__title {
+  margin-top: 8mm;
+  font-size: 30pt;
+  font-weight: 300;
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+  max-width: 140mm;
+}
+
+.opener__goal {
+  margin-top: 7mm;
+  font-size: 11.4pt;
+  line-height: 1.5;
+  max-width: 118mm;
+  color: rgba(255, 255, 255, 0.86);
+  padding-left: 4mm;
+  border-left: 2px solid rgba(255, 255, 255, 0.4);
+}
+
+.opener__list {
+  margin-top: auto;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2.4mm 8mm;
+  font-size: 10pt;
+  color: rgba(255, 255, 255, 0.9);
+  padding-top: 6mm;
+  border-top: 1px solid rgba(255, 255, 255, 0.28);
+}
+
+.opener__list span { display: flex; gap: 2.4mm; }
+.opener__list b { color: #fff; font-weight: 700; }
+
+/* ---------- utilitas ---------- */
+
+.cols { display: grid; gap: 6mm; }
+.cols--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.cols--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.cols--65 { grid-template-columns: 1.55fr 1fr; }
+.cols--figure { grid-template-columns: 1fr; }
+
+.stack { display: flex; flex-direction: column; }
+.stack > * + * { margin-top: 3mm; }
+
+.spacer { flex: 1 1 auto; }
+
+.small { font-size: 9.6pt; color: var(--ink-3); }
+.tiny { font-size: 8.6pt; color: var(--ink-3); }
+
+.kv {
+  display: grid;
+  grid-template-columns: 32mm 1fr;
+  gap: 1.6mm 5mm;
+  font-size: 10pt;
+}
+.kv dt { color: var(--ink-3); }
+.kv dd { margin: 0; }
+
+.hr { height: 1px; background: var(--line); margin: 4mm 0; }
+
+.figure-wide img { width: 100%; }
+
+/* dua gambar bersebelahan */
+.figrow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4mm;
+}
+.figrow .fig { margin: 0; }
+
+/* daftar berbutir tanpa bullet bawaan */
+ul.plain { list-style: none; padding: 0; }
+ul.plain > li { padding-left: 5mm; position: relative; margin-bottom: 1.8mm; }
+ul.plain > li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 2.1mm;
+  width: 1.8mm;
+  height: 1.8mm;
+  background: var(--accent);
+  border-radius: 50%;
+}
+
+/* kotak pembuka bagian (di dalam halaman isi) */
+.pull {
+  font-size: 12.6pt;
+  font-weight: 300;
+  line-height: 1.42;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  border-top: 1.6px solid var(--ink);
+  padding-top: 3mm;
+  margin-bottom: 4mm;
+  max-width: 150mm;
+}
+
+/* peta sistem (SVG) */
+.diagram { width: 100%; }
+.diagram figcaption { font-size: 8.4pt; color: var(--ink-3); margin-top: 2mm; }
+
+/* sampul belakang */
+.p-back > .trim { padding: 0; }
+.back {
+  height: 100%;
+  background:
+    radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px) 0 0 / var(--dot-pitch) var(--dot-pitch),
+    #101418;
+  color: #fff;
+  padding: 24mm 20mm;
+  display: flex;
+  flex-direction: column;
+}
+.back__title { font-size: 20pt; font-weight: 300; line-height: 1.3; max-width: 130mm; }
+.back__rows { margin-top: auto; display: grid; gap: 3mm; font-size: 9pt; color: rgba(255,255,255,.8); }
+.back__rows b { color: #fff; display: block; font-weight: 600; }
+
+/* ---------- layar (pratinjau) ---------- */
+
+@media screen {
+  .gb-page { box-shadow: 0 1px 4px rgba(24, 24, 27, 0.18); }
+  body { padding: 10mm 0; }
+}
+
+@media print {
+  body { background: #fff; padding: 0; }
+  .gb-page { margin: 0; box-shadow: none; }
+}
